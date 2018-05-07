@@ -1,0 +1,23 @@
+{
+  "name": "puff-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "midi": "^0.9.5",
+    "easymidi": "^0.0.4",
+    "connect": "^3.6.5",
+    "rpi-gpio": "^0.9.1",
+    "node-osc": "^2.1.0",
+    "osc-js": "^1.2.2",
+    "serve-static": "^1.13.1",
+    "bonjour": "^3.5.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Jonas Barsten",
+  "license": "ISC"
+}

@@ -1,0 +1,29 @@
+'use strict';
+
+var connect = require('connect');
+var serveStatic = require('serve-static');
+var bonjour = require('bonjour')();
+var midi = require('midi');
+
+var input = new midi.input();
+
+const portCount = input.getPortCount();
+
+console.log(portCount);
+
+
+// bonjour.find({}, function (result, more) {
+//  console.log(result);
+//  console.log(more);
+// });
+
+// let name = browser.services.length + 1;
+// name = toString(name);
+
+// bonjour.publish({ name: 'Puff', type: 'http', port: 8080 })
+bonjour.publish({ name: 'Puff 1', type: 'http', port: 9090 })
+
+
+connect().use(serveStatic(__dirname)).listen(8080, function(){
+    console.log('Server running on 8080...');
+});
