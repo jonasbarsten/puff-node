@@ -4,14 +4,14 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
-    "midi": "^0.9.5",
-    "easymidi": "^0.0.4",
+    "bonjour": "^3.5.0",
     "connect": "^3.6.5",
-    "rpi-gpio": "^0.9.1",
+    "easymidi": "0.0.4",
+    "midi": "^0.9.5",
     "node-osc": "^2.1.0",
     "osc-js": "^1.2.2",
-    "serve-static": "^1.13.1",
-    "bonjour": "^3.5.0"
+    "rpi-gpio": "^0.9.1",
+    "serve-static": "^1.13.1"
   },
   "devDependencies": {},
   "scripts": {
