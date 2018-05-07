@@ -9,7 +9,24 @@ var osc = require('node-osc');
 var artnet = require('./modules/artnet.js');
 var ledController = require('./modules/ledController.js');
 
+ledController.setColor([50, 50, 50, 50]);
+ledController.setUpdateRate(500);
+
 ledController.rotatePuffVertically('0');
+
+ledController.start();
+
+setInterval(() => {
+  ledController.stop();
+}, 5000);
+
+setInterval(() => {
+  ledController.start();
+}, 7000);
+
+setInterval(() => {
+  ledController.stop();
+}, 10000);
 
 var inputs = easymidi.getInputs();
 let teensy = '';

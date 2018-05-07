@@ -4,10 +4,11 @@ const logUpdate = require('log-update');
 var artnet = require('artnet')();
 
 const numberOfPuffs = 4;
-const updateRate = 500;
-const outputRate = 80;
 const ledsInRow = 4;
+const outputRate = 80;
+let updateRate = 500;
 let rgbw = [100,100,100,100];
+let mainTimer = null;
 
 let state = {
 	'0': {
@@ -31,6 +32,14 @@ let state = {
 		'2': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 	},
 }
+
+exports.setColor = (newRgbw) => {
+	rgbw = newRgbw;
+};
+
+exports.setUpdateRate = (newUpdateRate) => {
+	updateRate = newUpdateRate;
+};
 
 exports.rotatePuffHorizontally = (puffNumber, reverse, preDelayTics, postDelayTics) => {
 
@@ -166,23 +175,20 @@ exports.rotateLineHorisontally = (puffNumber, lineNumber, reverse, preDelayTics,
 	}, updateRate);
 };
 
-setInterval(() => {
+exports.stop = () => {
+	clearTimeout(mainTimer);
+};
 
-	// Channel 1 = Led 1 Red 
-	// Channel 2 = Led 1 Green
-	// Channel 3 = Led 1 Blue
-	// Channel 4 = Led 1 White
+exports.outputOnce = () => {
+	const combinedArray = [
+		[].concat.apply([], state['0']['0']),
+		[].concat.apply([], state['0']['1']),
+		[].concat.apply([], state['0']['2'])
+	]; 
 
-	// Channel 5 = Led 2 Red 
-	// Channel 6 = Led 2 Green
-	// Channel 7 = Led 2 Blue
-	// Channel 8 = Led 2 White
+	var flatArray = [].concat.apply([], combinedArray);
 
-	// etc ...
-
-	var flatArray = [].concat.apply([], state['0']['0']);
-
-	console.log(flatArray);
+	// console.log(flatArray);
 
 	// set channel 1 to 255.
 	artnet.set(1, 1, flatArray);
@@ -191,12 +197,69 @@ setInterval(() => {
   // const lineOne = state['0']['0'];
   // const lineTwo = state['0']['1'];
   // const lineThree = state['0']['2'];
+  const lineOne = flatArray.slice(0, 16);
+  const lineTwo = flatArray.slice(16, 32);
+  const lineThree = flatArray.slice(32, 48);
 
-  // logUpdate(
-		// `
-		//  ${lineOne}
-		//  ${lineTwo}
-		//  ${lineThree}
-		// `
-  // );
-}, outputRate);
+  // console.log(lineOne);
+  // console.log(lineTwo);
+  // console.log(lineThree);
+
+  logUpdate(
+		`
+		 ${lineOne}
+		 ${lineTwo}
+		 ${lineThree}
+		`
+  );
+}
+
+exports.start = () => {
+	this.outputOnce();
+	mainTimer = setTimeout(this.start, outputRate);
+};
+
+
+// exports.startOld = () => {mainTimer = setInterval(() => {
+
+// 	// Channel 1 = Led 1 Red 
+// 	// Channel 2 = Led 1 Green
+// 	// Channel 3 = Led 1 Blue
+// 	// Channel 4 = Led 1 White
+
+// 	// Channel 5 = Led 2 Red 
+// 	// Channel 6 = Led 2 Green
+// 	// Channel 7 = Led 2 Blue
+// 	// Channel 8 = Led 2 White
+
+// 	// etc ...
+
+// 	const combinedArray = [
+// 		[].concat.apply([], state['0']['0']),
+// 		[].concat.apply([], state['0']['1']),
+// 		[].concat.apply([], state['0']['2'])
+// 	]; 
+
+// 	var flatArray = [].concat.apply([], combinedArray);
+
+// 	// console.log(flatArray);
+
+// 	// set channel 1 to 255.
+// 	artnet.set(1, 1, flatArray);
+
+// 	// Logging to terminal
+//   // const lineOne = state['0']['0'];
+//   // const lineTwo = state['0']['1'];
+//   // const lineThree = state['0']['2'];
+//   const lineOne = flatArray.slice(0, 16);
+//   const lineTwo = flatArray.slice(16, 32);
+//   const lineThree = flatArray.slice(32, 48);
+
+//   logUpdate(
+// 		`
+// 		 ${lineOne}
+// 		 ${lineTwo}
+// 		 ${lineThree}
+// 		`
+//   );
+// }, outputRate)};
