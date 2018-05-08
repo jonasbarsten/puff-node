@@ -7,17 +7,20 @@ var serveStatic = require('serve-static');
 
 var ledController = require('./modules/ledController.js');
 var osc = require('./modules/osc.js');
+var midi = require('./modules/midi.js');
 
 ledController.setColor([50, 50, 50, 50]);
 ledController.setUpdateRate(100);
-// ledController.rotatePuffHorizontally('0', 1);
+ledController.rotatePuffHorizontally('0', 1);
 // ledController.allOff('0');
-ledController.start();
+// ledController.start();
 
-osc.open();
+midi.listen((note, value) => {
+  console.log(note, value);
+});
+
 osc.listen((message, info) => {
-  console.log(message);
-  console.log(info);
+  console.log(message, info);
 });
 
 setInterval(() => {

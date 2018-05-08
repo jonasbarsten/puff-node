@@ -5,7 +5,7 @@ var artnet = require('artnet')();
 
 const numberOfPuffs = 4;
 const ledsInRow = 4;
-const outputRate = 80;
+const outputRate = 30;
 let updateRate = 500;
 let rgbw = [100,100,100,100];
 let mainTimer = null;
@@ -234,6 +234,8 @@ exports.start = () => {
 	this.outputOnce();
 	mainTimer = setTimeout(this.start, outputRate);
 };
+
+this.start();
 
 
 // exports.startOld = () => {mainTimer = setInterval(() => {

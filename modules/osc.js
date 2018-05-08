@@ -24,13 +24,10 @@ exports.open = () => {
 };
 
 exports.listen = (callback) => {
-	// Waiting for the port to become ready
-	// TODO: fix this with promises etc ...
-	setTimeout(() => {
-		return udpPort.on("osc", (message, info) => {
-			callback(message, info);
-		});
-	}, 3000);
+	// No need to wait for port to open since it opens at the end of this file
+	return udpPort.on("osc", (message, info) => {
+		callback(message, info);
+	});
 };
 
 exports.close = () => {
@@ -68,3 +65,5 @@ exports.changeInPort = (port) => {
 	inPort = port;
 	this.open();
 };
+
+this.open();

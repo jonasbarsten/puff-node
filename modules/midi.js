@@ -4,6 +4,7 @@ var easymidi = require('easymidi');
 
 var inputs = easymidi.getInputs();
 let teensy = '';
+let input = null;
 
 // Finding teensy with piezo (Fiskehest)
 for (var i = 0; i < inputs.length; i++) {
@@ -14,17 +15,17 @@ for (var i = 0; i < inputs.length; i++) {
 };
 
 if (teensy) {
-  var input = new easymidi.Input(teensy);
-  // var client = new osc.Client('10.0.128.106', 8010);
+  input = new easymidi.Input(teensy);
+}
 
-  // MIDI 2 OSC
-  input.on('noteon', function (msg) {
-    // console.log(msg);
-
-    const velocityFloat = msg.velocity / 127;
-    const note = msg.note;
-    // var msg = new osc.Message('/surfaces/Fixture 1/opacity', velocityFloat);
-
-    // client.send(msg)
-  });
+exports.listen = (callback) => {
+	if (input) {
+		return input.on('noteon', (msg) => {
+		  const velocityFloat = msg.velocity / 127;
+		  const note = msg.note;
+		  callback(note, velocityFloat);
+		});
+	} else {
+		callback('No teensy found', null);
+	}
 }
