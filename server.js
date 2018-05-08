@@ -18,7 +18,7 @@ midi.listen((note, value) => {
 osc.listen((message, info) => {
 
 
-
+  console.log(message);
 
   if (message.address === '/speed') {
     const speed = message.args[0].value;
