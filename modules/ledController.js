@@ -1,7 +1,7 @@
 'use strict';
 
 const logUpdate = require('log-update');
-var artnet = require('artnet')();
+var artnet = require('artnet')({host: '127.0.0.1'});
 
 const numberOfPuffs = 4;
 const ledsInRow = 4;
@@ -204,15 +204,8 @@ exports.outputOnce = () => {
 
 	var flatArray = [].concat.apply([], combinedArray);
 
-	// console.log(flatArray);
-
-	// set channel 1 to 255.
 	artnet.set(1, 1, flatArray);
 
-	// Logging to terminal
-  // const lineOne = state['0']['0'];
-  // const lineTwo = state['0']['1'];
-  // const lineThree = state['0']['2'];
   const lineOne = flatArray.slice(0, 16);
   const lineTwo = flatArray.slice(16, 32);
   const lineThree = flatArray.slice(32, 48);
@@ -236,48 +229,3 @@ exports.start = () => {
 };
 
 this.start();
-
-
-// exports.startOld = () => {mainTimer = setInterval(() => {
-
-// 	// Channel 1 = Led 1 Red 
-// 	// Channel 2 = Led 1 Green
-// 	// Channel 3 = Led 1 Blue
-// 	// Channel 4 = Led 1 White
-
-// 	// Channel 5 = Led 2 Red 
-// 	// Channel 6 = Led 2 Green
-// 	// Channel 7 = Led 2 Blue
-// 	// Channel 8 = Led 2 White
-
-// 	// etc ...
-
-// 	const combinedArray = [
-// 		[].concat.apply([], state['0']['0']),
-// 		[].concat.apply([], state['0']['1']),
-// 		[].concat.apply([], state['0']['2'])
-// 	]; 
-
-// 	var flatArray = [].concat.apply([], combinedArray);
-
-// 	// console.log(flatArray);
-
-// 	// set channel 1 to 255.
-// 	artnet.set(1, 1, flatArray);
-
-// 	// Logging to terminal
-//   // const lineOne = state['0']['0'];
-//   // const lineTwo = state['0']['1'];
-//   // const lineThree = state['0']['2'];
-//   const lineOne = flatArray.slice(0, 16);
-//   const lineTwo = flatArray.slice(16, 32);
-//   const lineThree = flatArray.slice(32, 48);
-
-//   logUpdate(
-// 		`
-// 		 ${lineOne}
-// 		 ${lineTwo}
-// 		 ${lineThree}
-// 		`
-//   );
-// }, outputRate)};
