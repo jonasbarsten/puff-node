@@ -5,15 +5,15 @@ var serveStatic = require('serve-static');
 
 var ledController = require('./modules/ledController.js');
 var osc = require('./modules/osc.js');
-// var midi = require('./modules/midi.js');
+var midi = require('./modules/midi.js');
 
 ledController.setColor([50, 50, 50, 50]);
 ledController.setUpdateRate(100);
 ledController.rotatePuffHorizontally('0', 1);
 
-// midi.listen((note, value) => {
-//   console.log(note, value);
-// });
+midi.listen((note, value) => {
+  console.log(note, value);
+});
 
 osc.listen((message, info) => {
   console.log(message, info);
