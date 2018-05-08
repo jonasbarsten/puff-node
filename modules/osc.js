@@ -40,16 +40,6 @@ exports.send = (address, args) => {
 	  udpPort.send({
 		  address: address,
 		  args: args
-		  // args: [
-		  //   {
-		  //     type: "s",
-		  //     value: "default"
-		  //   },
-		  //   {
-		  //     type: "i",
-		  //     value: 100
-		  //   }
-		  // ]
 		}, outAddress, outPort);
 	}
 };
