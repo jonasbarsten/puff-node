@@ -11,6 +11,7 @@
     "log-update": "^2.3.0",
     "midi": "^0.9.5",
     "node-osc": "^2.1.0",
+    "osc": "^2.2.1",
     "osc-js": "^1.2.2",
     "rpi-gpio": "^0.9.1",
     "serve-static": "^1.13.1"

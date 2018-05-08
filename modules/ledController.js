@@ -205,13 +205,13 @@ exports.outputOnce = () => {
   // console.log(lineTwo);
   // console.log(lineThree);
 
-  logUpdate(
-		`
-		 ${lineOne}
-		 ${lineTwo}
-		 ${lineThree}
-		`
-  );
+  // logUpdate(
+		// `
+		//  ${lineOne}
+		//  ${lineTwo}
+		//  ${lineThree}
+		// `
+  // );
 }
 
 exports.start = () => {
