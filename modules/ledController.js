@@ -206,9 +206,9 @@ exports.outputOnce = () => {
 
 	artnet.set(1, 1, flatArray);
 
-  const lineOne = flatArray.slice(0, 16);
-  const lineTwo = flatArray.slice(16, 32);
-  const lineThree = flatArray.slice(32, 48);
+  // const lineOne = flatArray.slice(0, 16);
+  // const lineTwo = flatArray.slice(16, 32);
+  // const lineThree = flatArray.slice(32, 48);
 
   // console.log(lineOne);
   // console.log(lineTwo);

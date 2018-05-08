@@ -16,7 +16,16 @@ midi.listen((note, value) => {
 });
 
 osc.listen((message, info) => {
-  console.log(message, info);
+
+
+
+
+  if (message.address === '/speed') {
+    const speed = message.args[0].value;
+    ledController.setUpdateRate(speed);
+  };
+
+
 });
 
 setInterval(() => {
