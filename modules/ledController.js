@@ -1,7 +1,9 @@
 'use strict';
 
 const logUpdate = require('log-update');
-var artnet = require('artnet')({host: '127.0.0.1'});
+var artnet = require('artnet')(
+	// {host: '127.0.0.1'}
+);
 
 const numberOfPuffs = 4;
 const ledsInRow = 4;
@@ -33,11 +35,38 @@ let state = {
 	},
 }
 
+const compareLed = (newLed, puffNumber, lineNumber, ledNumber) => {
+	const oldLed = state[puffNumber][lineNumber][ledNumber];
+	let combinedLed = [];
+
+	if (oldLed.toString() == "0,0,0,0") {
+		// If old led is dead, bring it alive or keep it dead
+		combinedLed = newLed;
+	} else if (newLed.toString() == "0,0,0,0") {
+		// If new led is dead, but old led is alive, keep old led
+		combinedLed = oldLed;
+	} else {
+		// Both old and new leds are alive
+		newLed.map((color, i) => {
+			if (oldLed[i] == 0) {
+				combinedLed[i] = color;
+			} else if (color == 0) {
+				combinedLed[i] = oldLed[i];
+			} else {
+				combinedLed[i] = (color + oldLed[i]) / 2;
+			}
+		});
+	}
+
+	return combinedLed;
+};
+
 exports.setColor = (newRgbw) => {
 	rgbw = newRgbw;
 };
 
 exports.setUpdateRate = (newUpdateRate) => {
+	console.log(newUpdateRate);
 	updateRate = newUpdateRate;
 };
 
@@ -77,7 +106,7 @@ exports.rotatePuffVertically = (puffNumber, reverse) => {
 		tic = 3;
 	}
 
-	setInterval(() => {
+	const output = () => {
 
 		puff['0'] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 		puff['1'] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
@@ -99,7 +128,13 @@ exports.rotatePuffVertically = (puffNumber, reverse) => {
 		} else {
 			if (tic == ledsInRow) {tic = 1};
 		}
-	}, updateRate)
+
+		setTimeout(output, updateRate);
+
+	};
+
+	output();
+
 };
 
 exports.rotatePuffDiagonally = (puffNumber, mode, preDelayTics, postDelayTics) => {
@@ -150,7 +185,7 @@ exports.rotateLineHorisontally = (puffNumber, lineNumber, reverse, preDelayTics,
 		tics = tics - preDelayTics;
 	};
 
-	setInterval(() => {
+	const output = () => {
 
 		if (tics > 0 && tics < ledsInRow + 1) {
 
@@ -188,7 +223,10 @@ exports.rotateLineHorisontally = (puffNumber, lineNumber, reverse, preDelayTics,
 			}
 		}
 
-	}, updateRate);
+		setTimeout(output, updateRate);
+	};
+
+	output();
 };
 
 exports.stop = () => {
