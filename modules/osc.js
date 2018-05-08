@@ -3,6 +3,7 @@
 var osc = require('osc');
 
 let oscPortReady = false;
+let outAddress = "10.0.255.255";
 let outPort = 8050;
 let inPort = 8010;
 let udpPort = null;
@@ -37,21 +38,22 @@ exports.close = () => {
 	udpPort.close();
 };
 
-exports.send = () => {
+exports.send = (address, args) => {
 	if (oscPortReady) {
 	  udpPort.send({
-		  address: "/s_new",
-		  args: [
-		    {
-		      type: "s",
-		      value: "default"
-		    },
-		    {
-		      type: "i",
-		      value: 100
-		    }
-		  ]
-		}, "10.0.255.255", outPort);
+		  address: address,
+		  args: args
+		  // args: [
+		  //   {
+		  //     type: "s",
+		  //     value: "default"
+		  //   },
+		  //   {
+		  //     type: "i",
+		  //     value: 100
+		  //   }
+		  // ]
+		}, outAddress, outPort);
 	}
 };
 

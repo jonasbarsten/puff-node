@@ -3,14 +3,15 @@
 var connect = require('connect');
 var serveStatic = require('serve-static');
 // var bonjour = require('bonjour')();
-var easymidi = require('easymidi');
+// var easymidi = require('easymidi');
 
 var ledController = require('./modules/ledController.js');
 var osc = require('./modules/osc.js');
 
 ledController.setColor([50, 50, 50, 50]);
-ledController.setUpdateRate(500);
-ledController.rotatePuffVertically('0');
+ledController.setUpdateRate(100);
+// ledController.rotatePuffHorizontally('0', 1);
+// ledController.allOff('0');
 ledController.start();
 
 osc.open();
@@ -20,7 +21,16 @@ osc.listen((message, info) => {
 });
 
 setInterval(() => {
-  osc.send();
+  osc.send("/hello/bitches", [
+    {
+      type: "s",
+      value: "default"
+    },
+    {
+      type: "i",
+      value: 100
+    }
+  ]);
 }, 2000);
 
 // setTimeout(() => {
@@ -44,32 +54,32 @@ setInterval(() => {
 
 
 
-var inputs = easymidi.getInputs();
-let teensy = '';
+// var inputs = easymidi.getInputs();
+// let teensy = '';
 
-// // // Finding teensy with piezo (Fiskehest)
-for (var i = 0; i < inputs.length; i++) {
-  let value = inputs[i];
-  if (value.substring(0, 9) === 'Fiskehest') {
-    teensy = value;
-  }
-}
+// // // // Finding teensy with piezo (Fiskehest)
+// for (var i = 0; i < inputs.length; i++) {
+//   let value = inputs[i];
+//   if (value.substring(0, 9) === 'Fiskehest') {
+//     teensy = value;
+//   }
+// }
 
-if (teensy) {
-  var input = new easymidi.Input(teensy);
-  var client = new osc.Client('10.0.128.106', 8010);
+// if (teensy) {
+//   var input = new easymidi.Input(teensy);
+//   var client = new osc.Client('10.0.128.106', 8010);
 
-  // MIDI 2 OSC
-  input.on('noteon', function (msg) {
-    // console.log(msg);
+//   // MIDI 2 OSC
+//   input.on('noteon', function (msg) {
+//     // console.log(msg);
 
-    const velocityFloat = msg.velocity / 127;
-    const note = msg.note;
-    // var msg = new osc.Message('/surfaces/Fixture 1/opacity', velocityFloat);
+//     const velocityFloat = msg.velocity / 127;
+//     const note = msg.note;
+//     // var msg = new osc.Message('/surfaces/Fixture 1/opacity', velocityFloat);
 
-    // client.send(msg)
-  });
-}
+//     // client.send(msg)
+//   });
+// }
 
 // bonjour.publish({ name: 'Puff 1', type: 'http', port: 9090 })
 

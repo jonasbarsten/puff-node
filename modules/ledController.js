@@ -41,6 +41,22 @@ exports.setUpdateRate = (newUpdateRate) => {
 	updateRate = newUpdateRate;
 };
 
+exports.allOff = (puffNumber) => {
+	state[puffNumber] = {
+		'0': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		'1': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		'2': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+	}
+};
+
+exports.allOn = (puffNumber) => {
+	state[puffNumber] = {
+		'0': [rgbw, rgbw, rgbw, rgbw],
+		'1': [rgbw, rgbw, rgbw, rgbw],
+		'2': [rgbw, rgbw, rgbw, rgbw]
+	}
+};
+
 exports.rotatePuffHorizontally = (puffNumber, reverse, preDelayTics, postDelayTics) => {
 
 	if (!reverse) {
