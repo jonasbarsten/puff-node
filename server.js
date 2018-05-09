@@ -9,7 +9,6 @@ var midi = require('./modules/midi.js');
 
 ledController.setColor([50, 50, 50, 50]);
 ledController.setUpdateRate(500);
-ledController.rotatePuffVertically('0', 1);
 ledController.rotatePuffHorizontally('0', 1);
 
 midi.listen((note, value) => {
