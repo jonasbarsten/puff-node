@@ -2,14 +2,14 @@
 
 const logUpdate = require('log-update');
 var artnet = require('artnet')(
-	{host: '127.0.0.1'}
+	// {host: '127.0.0.1'}
 );
 
 const numberOfPuffs = 4;
 const ledsInRow = 4;
 const outputRate = 30;
 let updateRate = 500;
-let rgbw = [100,100,100,100];
+let rgbw = [20,20,20,20];
 let mainTimer = null;
 
 let state = {
