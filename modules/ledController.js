@@ -2,7 +2,7 @@
 
 const logUpdate = require('log-update');
 var artnet = require('artnet')(
-	// {host: '127.0.0.1'}
+	{host: '127.0.0.1'}
 );
 
 const numberOfPuffs = 4;

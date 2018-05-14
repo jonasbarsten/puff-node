@@ -7,12 +7,6 @@ var ledController = require('./modules/ledController.js');
 var osc = require('./modules/osc.js');
 var midi = require('./modules/midi.js');
 
-// ledController.rotatePuffHorizontally("0");
-
-setInterval(() => {
-  io.sockets.emit('FromAPI', new Date());
-}, 2000);
-
 io.on('connection', (client) => {
   client.on('runFunction', (functionName, args) => {
     console.log(functionName);
@@ -138,7 +132,7 @@ osc.listen((message, info) => {
   }
 });
 
-// Send ping every second and check if IP has changed
+
 setInterval(() => {
   state.localIp = getIp();
   const now = new Date();
@@ -149,6 +143,9 @@ setInterval(() => {
       value: now
     }
   ]);
+
+  io.sockets.emit('FromAPI', state);
+
 }, 1000);
 
 // bonjour.publish({ name: 'Puff 1', type: 'http', port: 9090 })
