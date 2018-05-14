@@ -17,8 +17,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "client": "cd client && yarn start",
-    "server": "nodemon server.js"
+    "start": "nodemon server.js"
   },
   "author": "Jonas Barsten",
   "license": "ISC"
