@@ -8,6 +8,8 @@ var ledController = require('./modules/ledController.js');
 var osc = require('./modules/osc.js');
 var midi = require('./modules/midi.js');
 
+ledController.allOn("0");
+
 const getIp = () => {
   var interfaces = os.networkInterfaces();
   var addresses = [];
