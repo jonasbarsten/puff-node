@@ -12,7 +12,8 @@
     "node-osc": "^2.1.0",
     "osc": "^2.2.1",
     "osc-js": "^1.2.2",
-    "rpi-gpio": "^0.9.1"
+    "rpi-gpio": "^0.9.1",
+    "socket.io": "^2.1.0"
   },
   "devDependencies": {},
   "scripts": {

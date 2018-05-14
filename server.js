@@ -1,14 +1,29 @@
 'use strict';
 
-// var connect = require('connect');
-// var serveStatic = require('serve-static');
+var io = require('socket.io')();
 var os = require('os');
 
 var ledController = require('./modules/ledController.js');
 var osc = require('./modules/osc.js');
 var midi = require('./modules/midi.js');
 
-ledController.rotatePuffHorizontally("0");
+// ledController.rotatePuffHorizontally("0");
+
+setInterval(() => {
+  io.sockets.emit('FromAPI', new Date());
+}, 2000);
+
+io.on('connection', (client) => {
+  client.on('runFunction', (functionName, args) => {
+    console.log(functionName);
+    console.log(args);
+    ledController[functionName](...args);
+  });
+});
+
+const port = 4001;
+io.listen(port);
+console.log('listening on port ', port);
 
 const getIp = () => {
   var interfaces = os.networkInterfaces();
