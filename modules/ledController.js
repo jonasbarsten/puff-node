@@ -129,11 +129,9 @@ exports.rotatePuffVertically = (puffNumber, reverse) => {
 			if (tic == ledsInRow) {tic = 1};
 		}
 
-		setTimeout(output, updateRate);
-
 	};
 
-	output();
+	return output;
 
 };
 

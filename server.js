@@ -92,9 +92,8 @@ osc.listen((message, info) => {
 
   if (!layerIsActive) {
     state.activeLayers[layer] = {
-      speed: 100,
-      start: false,
-      stop: true,
+      speed: 500,
+      running: false,
       color: [20,20,20,20],
       preOffset: 0,
       postOffset: 0,
@@ -107,7 +106,17 @@ osc.listen((message, info) => {
     const args = directionMap[direction].args;
 
     if (command && args) {
-      ledController[command](...args);
+
+      // Create new instance
+      const animationFunc = ledController[command](...args);
+
+      const runOnce = () => {
+        animationFunc();
+        state.activeLayers[layer].timer = setTimeout(runOnce, state.activeLayers[layer].speed);
+      }
+
+      runOnce();
+
     };
   }
 });
@@ -127,6 +136,6 @@ setInterval(() => {
 
 // bonjour.publish({ name: 'Puff 1', type: 'http', port: 9090 })
 
-// connect().use(serveStatic(__dirname)).listen(8080, function(){
-//     console.log('Server running on 8080...');
-// });
+connect().use(serveStatic(__dirname)).listen(8080, function(){
+    console.log('Server running on 8080...');
+});
