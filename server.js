@@ -120,7 +120,7 @@ osc.listen((message, info) => {
         lastSeen: value
       });
     } else {
-      state.neighbours[position].lastSeen = new Date();
+      state.neighbours[position].lastSeen = moment().valueOf();
     };
   };
 
@@ -160,7 +160,7 @@ osc.listen((message, info) => {
 
 setInterval(() => {
   state.localIp = getIp();
-  const now = moment();
+  const now = moment().valueOf();
 
   // Send alive ping to network
   osc.send(`/puff/${state.localIp}/ping`, [
@@ -175,7 +175,7 @@ setInterval(() => {
 
   // Remove dead neighbours
   state.neighbours.map((neighbour, i) => {
-    const lastSeen = neighbour.lastSeen;
+    const lastSeen = Number(neighbour.lastSeen);
     if (moment(lastSeen).isBefore(moment().subtract(2, 'seconds'))) {
       state.neighbours.splice(i, 1);
     };
