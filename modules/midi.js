@@ -16,7 +16,7 @@ for (var i = 0; i < inputs.length; i++) {
 
 if (teensy) {
   input = new easymidi.Input(teensy);
-}
+};
 
 exports.listen = (callback) => {
 	if (input) {
@@ -28,4 +28,4 @@ exports.listen = (callback) => {
 	} else {
 		callback('No teensy found', null);
 	}
-}
+};

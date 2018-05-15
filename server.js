@@ -9,9 +9,10 @@ var midi = require('./modules/midi.js');
 
 io.on('connection', (client) => {
   client.on('runFunction', (functionName, args) => {
-    console.log(functionName);
-    console.log(args);
     ledController[functionName](...args);
+  });
+  client.on('restart', () => {
+    
   });
 });
 
