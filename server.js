@@ -2,6 +2,7 @@
 
 var io = require('socket.io')();
 var os = require('os');
+var moment = require('moment');
 
 var ledController = require('./modules/ledController.js');
 var osc = require('./modules/osc.js');
@@ -14,11 +15,18 @@ io.on('connection', (client) => {
   client.on('restart', () => {
     
   });
+  client.on('oscSend', (address, value) => {
+    osc.send(address, [
+      {
+        type: "s",
+        value: value
+      }
+    ]);
+  });
 });
 
 const port = 4001;
 io.listen(port);
-console.log('listening on port ', port);
 
 const getIp = () => {
   var interfaces = os.networkInterfaces();
@@ -39,7 +47,8 @@ let state = {
   activeLayers: {},
   lastMidi: {},
   lastOsc: {},
-  localIp: getIp()
+  localIp: getIp(),
+  neighbours: []
 };
 
 const directionMap = {
@@ -78,7 +87,6 @@ const directionMap = {
 };
 
 midi.listen((note, value) => {
-  console.log(note, value);
   state.lastMidi = {note, value};
 });
 
@@ -94,11 +102,27 @@ osc.listen((message, info) => {
     return;
   }
 
-  const department = messageArray[3] // Lights
+  const department = messageArray[3] // Lights or ping
   const layer = messageArray[4]; // Layer number, alloff or allon
   const direction = messageArray[5]; // n, s, e, w, ne, nw, se or sw
   const func = messageArray[6]; // start, stop, speed, color, preOffset or postOffset
   const value = (message && message.args[0] && message.args[0].value); // 200, [255, 255, 255, 255]
+
+  if (department == 'ping') {
+
+    const position = state.neighbours.map((neighbour) => { 
+      return neighbour.ip; 
+    }).indexOf(ip);
+    
+    if (position == -1) {
+      state.neighbours.push({
+        ip: ip,
+        lastSeen: value
+      });
+    } else {
+      state.neighbours[position].lastSeen = new Date();
+    };
+  };
 
   const layerIsActive = state.activeLayers[layer];
 
@@ -136,8 +160,9 @@ osc.listen((message, info) => {
 
 setInterval(() => {
   state.localIp = getIp();
-  const now = new Date();
+  const now = moment();
 
+  // Send alive ping to network
   osc.send(`/puff/${state.localIp}/ping`, [
     {
       type: "s",
@@ -145,12 +170,15 @@ setInterval(() => {
     }
   ]);
 
+  // Send state to clients
   io.sockets.emit('FromAPI', state);
 
+  // Remove dead neighbours
+  state.neighbours.map((neighbour, i) => {
+    const lastSeen = neighbour.lastSeen;
+    if (moment(lastSeen).isBefore(moment().subtract(2, 'seconds'))) {
+      state.neighbours.splice(i, 1);
+    };
+  });
+
 }, 1000);
-
-// bonjour.publish({ name: 'Puff 1', type: 'http', port: 9090 })
-
-// connect().use(serveStatic(__dirname)).listen(8080, function(){
-//     console.log('Server running on 8080...');
-// });
