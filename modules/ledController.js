@@ -2,14 +2,15 @@
 
 const logUpdate = require('log-update');
 var artnet = require('artnet')(
-	{host: '127.0.0.1'}
+	// {host: '127.0.0.1'}
 );
 
 const numberOfPuffs = 4;
 const ledsInRow = 4;
 const outputRate = 30;
 let updateRate = 500;
-let rgbw = [20,20,20,20];
+const rgbwDefault = [10,10,10,10];
+let rgbwSum = [0,0,0,0];
 let mainTimer = null;
 
 let state = {
@@ -80,9 +81,9 @@ exports.allOff = (puffNumber) => {
 
 exports.allOn = (puffNumber) => {
 	state[puffNumber] = {
-		'0': [rgbw, rgbw, rgbw, rgbw],
-		'1': [rgbw, rgbw, rgbw, rgbw],
-		'2': [rgbw, rgbw, rgbw, rgbw]
+		'0': [rgbwDefault, rgbwDefault, rgbwDefault, rgbwDefault],
+		'1': [rgbwDefault, rgbwDefault, rgbwDefault, rgbwDefault],
+		'2': [rgbwDefault, rgbwDefault, rgbwDefault, rgbwDefault]
 	}
 };
 
@@ -92,12 +93,38 @@ exports.rotatePuffHorizontally = (puffNumber, reverse, preDelayTics, postDelayTi
 		let reverse = false;
 	}
 
+	var self = {};
+
+	let lines = [];
+
 	Object.keys(state[puffNumber]).map((key, index) => {
-		this.rotateLineHorisontally(puffNumber, key, reverse, preDelayTics, postDelayTics);
+		lines.push(this.rotateLineHorisontally(puffNumber, key, reverse, preDelayTics, postDelayTics));
 	});
+
+	const output = () => {
+		lines.map((line) => {
+			line.output();
+		});
+	}
+
+	const changeColor = () => {
+		lines.map((line) => {
+			line.changeColor();
+		});
+	}
+
+	self.output = output;
+	self.changeColor = changeColor;
+
+	return self;
+
 };
 
 exports.rotatePuffVertically = (puffNumber, reverse) => {
+
+	let rgbw = rgbwDefault;
+
+	var self = {};
 	
 	let puff = state[puffNumber];
 	let tic = 1;
@@ -131,51 +158,82 @@ exports.rotatePuffVertically = (puffNumber, reverse) => {
 
 	};
 
-	return output;
+	const changeColor = (color) => {
+		rgbw = color;
+	};
+
+	self.output = output;
+	self.changeColor = changeColor;
+
+	return self;
 
 };
 
 exports.rotatePuffDiagonally = (puffNumber, mode, preDelayTics, postDelayTics) => {
 
+	var self = {};
+	let lines = [];
+
 	if (!mode) {
 		let mode = 1;
-	}
+	};
 
 	if (!preDelayTics) {
 		let preDelayTics = 0;
-	}
+	};
 
 	if (!postDelayTics) {
 		let postDelayTics = 0;
-	}
+	};
 
 	if (mode == 1) {
-		this.rotateLineHorisontally(puffNumber, '0', false, 0, 2);
-		this.rotateLineHorisontally(puffNumber, '1', false, 1, 2);
-		this.rotateLineHorisontally(puffNumber, '2', false, 2, 2);
-	}
+		lines.push(this.rotateLineHorisontally(puffNumber, '0', false, 0, 2));
+		lines.push(this.rotateLineHorisontally(puffNumber, '1', false, 1, 2));
+		lines.push(this.rotateLineHorisontally(puffNumber, '2', false, 2, 2));
+	};
 
 	if (mode == 2) {
-		this.rotateLineHorisontally(puffNumber, '0', true, 0, 2);
-		this.rotateLineHorisontally(puffNumber, '1', true, 1, 2);
-		this.rotateLineHorisontally(puffNumber, '2', true, 2, 2);
-	}
+		lines.push(this.rotateLineHorisontally(puffNumber, '0', true, 0, 2));
+		lines.push(this.rotateLineHorisontally(puffNumber, '1', true, 1, 2));
+		lines.push(this.rotateLineHorisontally(puffNumber, '2', true, 2, 2));
+	};
 
 	if (mode == 3) {
-		this.rotateLineHorisontally(puffNumber, '0', false, 2, 2);
-		this.rotateLineHorisontally(puffNumber, '1', false, 1, 2);
-		this.rotateLineHorisontally(puffNumber, '2', false, 0, 2);
-	}
+		lines.push(this.rotateLineHorisontally(puffNumber, '0', false, 2, 2));
+		lines.push(this.rotateLineHorisontally(puffNumber, '1', false, 1, 2));
+		lines.push(this.rotateLineHorisontally(puffNumber, '2', false, 0, 2));
+	};
 
 	if (mode == 4) {
-		this.rotateLineHorisontally(puffNumber, '0', true, 2, 2);
-		this.rotateLineHorisontally(puffNumber, '1', true, 1, 2);
-		this.rotateLineHorisontally(puffNumber, '2', true, 0, 2);
-	}
+		lines.push(this.rotateLineHorisontally(puffNumber, '0', true, 2, 2));
+		lines.push(this.rotateLineHorisontally(puffNumber, '1', true, 1, 2));
+		lines.push(this.rotateLineHorisontally(puffNumber, '2', true, 0, 2));
+	};
+
+	const output = () => {
+		lines.map((line) => {
+			line.output();
+		});
+	};
+
+	const changeColor = () => {
+		lines.map((line) => {
+			line.changeColor();
+		});
+	};
+
+	self.output = output;
+	self.changeColor = changeColor;
+
+	return self;
 
 };
 
 exports.rotateLineHorisontally = (puffNumber, lineNumber, reverse, preDelayTics, postDelayTics) => {
+
+	let rgbw = rgbwDefault;
+
+	var self = {};
 
 	let tics = 1;
 
@@ -221,10 +279,17 @@ exports.rotateLineHorisontally = (puffNumber, lineNumber, reverse, preDelayTics,
 			}
 		}
 
-		setTimeout(output, updateRate);
+		// setTimeout(output, updateRate);
 	};
 
-	output();
+	const changeColor = (color) => {
+		rgbw = color;
+	};
+
+	self.output = output;
+	self.changeColor = changeColor;
+
+	return self;
 };
 
 exports.stop = () => {

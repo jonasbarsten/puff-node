@@ -10,6 +10,8 @@ var midi = require('./modules/midi.js');
 
 io.on('connection', (client) => {
   client.on('runFunction', (functionName, args) => {
+    console.log(functionName);
+    console.log(args);
     ledController[functionName](...args);
   });
   client.on('restart', () => {
@@ -48,7 +50,7 @@ let state = {
   lastMidi: {},
   lastOsc: {},
   localIp: getIp(),
-  neighbours: []
+  neighbours: [],
 };
 
 const directionMap = {
@@ -93,14 +95,13 @@ midi.listen((note, value) => {
 osc.listen((message, info) => {
   state.lastOsc = {message, info};
 
+  // console.log(message);
+  // console.log(info);
+
   const messageArray = message.address.split("/");
 
   const item = messageArray[1]
   const ip = messageArray[2];
-
-  if (state.localIp != ip || item != 'puff') {
-    return;
-  }
 
   const department = messageArray[3] // Lights or ping
   const layer = messageArray[4]; // Layer number, alloff or allon
@@ -122,6 +123,49 @@ osc.listen((message, info) => {
     } else {
       state.neighbours[position].lastSeen = moment().valueOf();
     };
+    return;
+  };
+
+  // Break if message isn't intended for current server
+  if (state.localIp != ip || item != 'puff') {
+    return;
+  }
+
+  if (layer == 'allOn') {
+    // TODO: start does not work after this when going south or north
+    Object.keys(state.activeLayers).map((key) => {
+      clearTimeout(state.activeLayers[key].timer);
+      state.activeLayers[key].running = false;
+    });
+    ledController.allOn("0");
+    return;
+  }
+
+  if (layer == 'allOff') {
+    // TODO: start does not work after this when going south or north
+    Object.keys(state.activeLayers).map((key) => {
+      clearTimeout(state.activeLayers[key].timer);
+      state.activeLayers[key].running = false;
+    });
+    ledController.allOff("0");
+    return;
+  }
+
+  if (layer == 'clearAll') {
+    Object.keys(state.activeLayers).map((key) => {
+      clearTimeout(state.activeLayers[key].timer);
+      state.activeLayers[key].running = false;
+    });
+    state.activeLayers = {};
+    ledController.allOff("0");
+    return;
+  }
+
+  const validLayer = Number.isInteger(parseInt(layer));
+
+  if (!validLayer) {
+    console.log('Not a valid layer');
+    return;
   };
 
   const layerIsActive = state.activeLayers[layer];
@@ -133,27 +177,60 @@ osc.listen((message, info) => {
       color: [20,20,20,20],
       preOffset: 0,
       postOffset: 0,
-      timer: null
+      timer: null,
+      func: null
     };
-  };
 
-  if (directionMap[direction]) {
-    const command = directionMap[direction].cmd;
-    const args = directionMap[direction].args;
+    if (directionMap[direction]) {
+      const command = directionMap[direction].cmd;
+      let args = directionMap[direction].args;
 
-    if (command && args) {
-
-      // Create new instance
-      const animationFunc = ledController[command](...args);
-
-      const runOnce = () => {
-        animationFunc();
-        state.activeLayers[layer].timer = setTimeout(runOnce, state.activeLayers[layer].speed);
+      if (command && args) {
+        // Create new instance
+        state.activeLayers[layer].func = ledController[command](...args);
+      }  else {
+        console.log('Unknown direction');
       }
 
-      runOnce();
+    }
+  };
 
-    };
+  switch (func) {
+    case 'start':
+      if (state.activeLayers[layer].running) {
+        console.log(`Layer ${layer} is already running`);
+      } else {
+        
+        const runOnce = () => {
+          state.activeLayers[layer].func.output();
+          state.activeLayers[layer].timer = setTimeout(runOnce, state.activeLayers[layer].speed);
+        }
+        runOnce();
+        state.activeLayers[layer].running = true;
+      };
+      break;
+    case 'stop':
+      if (!state.activeLayers[layer].running) {
+        console.log(`Layer ${layer} is not running`);
+      } else {
+        clearTimeout(state.activeLayers[layer].timer);
+        state.activeLayers[layer].running = false;
+      }
+      break;
+    case 'speed':
+      state.activeLayers[layer].speed = value;
+      break;
+    case 'color':
+      const color = JSON.parse("[" + value + "]");
+      state.activeLayers[layer].color = color;
+      state.activeLayers[layer].func.changeColor(color);
+      break;
+    case 'preOffset':
+      break;
+    case 'postOffset':
+      break;
+    default:
+      console.log('Unknown command');
   }
 });
 
@@ -170,15 +247,17 @@ setInterval(() => {
     }
   ]);
 
-  // Send state to clients
-  io.sockets.emit('FromAPI', state);
-
   // Remove dead neighbours
   state.neighbours.map((neighbour, i) => {
     const lastSeen = Number(neighbour.lastSeen);
     if (moment(lastSeen).isBefore(moment().subtract(2, 'seconds'))) {
       state.neighbours.splice(i, 1);
     };
-  });
+  }); 
+
+  // Send state to clients
+  io.sockets.emit('FromAPI', state.neighbours);
+
+  // console.log(state);
 
 }, 1000);
