@@ -7,6 +7,7 @@ var moment = require('moment');
 var ledController = require('./modules/ledController.js');
 var osc = require('./modules/osc.js');
 var midi = require('./modules/midi.js');
+var gitPullOrClone = require('git-pull-or-clone')
 
 // io.on('connection', (client) => {
 //   client.on('runFunction', (functionName, args) => {
@@ -103,7 +104,7 @@ osc.listen((message, info) => {
   const item = messageArray[1]
   const ip = messageArray[2];
 
-  const department = messageArray[3] // Lights or ping
+  const department = messageArray[3] // Lights, ping or update
   const layer = messageArray[4]; // Layer number, alloff or allon
   const direction = messageArray[5]; // n, s, e, w, ne, nw, se or sw
   const func = messageArray[6]; // start, stop, speed, color, preOffset or postOffset
@@ -128,6 +129,14 @@ osc.listen((message, info) => {
 
   // Break if message isn't intended for current server
   if (state.localIp != ip || item != 'puff') {
+    return;
+  };
+
+  if (department == 'update') {
+    gitPullOrClone('https://github.com/jonasbarsten/puff-node.git', '/home/pi/puff-node', (err) => {
+      if (err) throw err
+      console.log('SUCCESS!')
+    });
     return;
   }
 
