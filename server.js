@@ -130,7 +130,7 @@ osc.listen((message, info) => {
   const func = messageArray[6]; // start, stop, speed, color, preOffset or postOffset
   const value = (message && message.args[0] && message.args[0].value); // 200, [255, 255, 255, 255]
 
-  if (department != lights || department != ping || department != update) {
+  if (department != 'lights' || department != 'ping' || department != 'update') {
     return;
   }
 
