@@ -89,9 +89,14 @@ const directionMap = {
   }
 };
 
-midi.listen((note, value) => {
+midi.noteListen((note, value) => {
   state.lastMidi = {note, value};
   console.log(note, value);
+});
+
+midi.ccListen((controller, value) => {
+  state.lastMidi = {controller, value};
+  console.log(controller, value);
 });
 
 osc.listen((message, info) => {
