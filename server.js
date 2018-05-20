@@ -1,6 +1,6 @@
 'use strict';
 
-var io = require('socket.io')();
+// var io = require('socket.io')();
 var os = require('os');
 var moment = require('moment');
 
@@ -8,27 +8,27 @@ var ledController = require('./modules/ledController.js');
 var osc = require('./modules/osc.js');
 var midi = require('./modules/midi.js');
 
-io.on('connection', (client) => {
-  client.on('runFunction', (functionName, args) => {
-    console.log(functionName);
-    console.log(args);
-    ledController[functionName](...args);
-  });
-  client.on('restart', () => {
+// io.on('connection', (client) => {
+//   client.on('runFunction', (functionName, args) => {
+//     console.log(functionName);
+//     console.log(args);
+//     ledController[functionName](...args);
+//   });
+//   client.on('restart', () => {
     
-  });
-  client.on('oscSend', (address, value) => {
-    osc.send(address, [
-      {
-        type: "s",
-        value: value
-      }
-    ]);
-  });
-});
+//   });
+//   client.on('oscSend', (address, value) => {
+//     osc.send(address, [
+//       {
+//         type: "s",
+//         value: value
+//       }
+//     ]);
+//   });
+// });
 
-const port = 4001;
-io.listen(port);
+// const port = 4001;
+// io.listen(port);
 
 const getIp = () => {
   var interfaces = os.networkInterfaces();
@@ -256,7 +256,7 @@ setInterval(() => {
   }); 
 
   // Send state to clients
-  io.sockets.emit('FromAPI', state.neighbours);
+  // io.sockets.emit('FromAPI', state.neighbours);
 
   // console.log(state);
 
