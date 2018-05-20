@@ -1,8 +1,10 @@
 'use strict';
 
+const uuid = require('uuid/v4');
+const util = require('util');
 const logUpdate = require('log-update');
 var artnet = require('artnet')(
-	{host: '127.0.0.1'}
+	// {host: '127.0.0.1'}
 );
 
 const numberOfPuffs = 4;
@@ -14,53 +16,19 @@ let rgbwSum = [0,0,0,0];
 let mainTimer = null;
 
 let state = {
-	'0': {
-		'0': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-		'1': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-		'2': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
-	},
-	'1': {
-		'0': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-		'1': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-		'2': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
-	},
-	'2': {
-		'0': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-		'1': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-		'2': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
-	},
-	'3': {
-		'0': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-		'1': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-		'2': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
-	},
-}
-
-const compareLed = (newLed, puffNumber, lineNumber, ledNumber) => {
-	const oldLed = state[puffNumber][lineNumber][ledNumber];
-	let combinedLed = [];
-
-	if (oldLed.toString() == "0,0,0,0") {
-		// If old led is dead, bring it alive or keep it dead
-		combinedLed = newLed;
-	} else if (newLed.toString() == "0,0,0,0") {
-		// If new led is dead, but old led is alive, keep old led
-		combinedLed = oldLed;
-	} else {
-		// Both old and new leds are alive
-		newLed.map((color, i) => {
-			if (oldLed[i] == 0) {
-				combinedLed[i] = color;
-			} else if (color == 0) {
-				combinedLed[i] = oldLed[i];
-			} else {
-				combinedLed[i] = (color + oldLed[i]) / 2;
-			}
-		});
-	}
-
-	return combinedLed;
+	layers: {}
 };
+
+const newLayer = () => {
+	const layerId = uuid();
+	let obj = {};
+	state.layers[layerId] = {
+		'0': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		'1': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+		'2': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+	};
+	return layerId;
+}
 
 exports.setColor = (newRgbw) => {
 	rgbw = newRgbw;
@@ -72,11 +40,7 @@ exports.setUpdateRate = (newUpdateRate) => {
 };
 
 exports.allOff = (puffNumber) => {
-	state[puffNumber] = {
-		'0': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-		'1': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-		'2': [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
-	}
+	state.layers = {};
 };
 
 exports.allOn = (puffNumber) => {
@@ -91,27 +55,31 @@ exports.rotatePuffHorizontally = (puffNumber, reverse, preDelayTics, postDelayTi
 
 	if (!reverse) {
 		let reverse = false;
-	}
+	};
 
 	var self = {};
 
-	let lines = [];
+	let lines = [
+		this.rotateLineHorisontally(puffNumber, "0", reverse, preDelayTics, postDelayTics),
+		this.rotateLineHorisontally(puffNumber, "1", reverse, preDelayTics, postDelayTics),
+		this.rotateLineHorisontally(puffNumber, "2", reverse, preDelayTics, postDelayTics)
+	];
 
-	Object.keys(state[puffNumber]).map((key, index) => {
-		lines.push(this.rotateLineHorisontally(puffNumber, key, reverse, preDelayTics, postDelayTics));
-	});
+	// Object.keys(state[puffNumber]).map((key, index) => {
+	// 	lines.push(this.rotateLineHorisontally(puffNumber, key, reverse, preDelayTics, postDelayTics));
+	// });
 
 	const output = () => {
 		lines.map((line) => {
 			line.output();
 		});
-	}
+	};
 
-	const changeColor = () => {
+	const changeColor = (color) => {
 		lines.map((line) => {
-			line.changeColor();
+			line.changeColor(color);
 		});
-	}
+	};
 
 	self.output = output;
 	self.changeColor = changeColor;
@@ -122,40 +90,36 @@ exports.rotatePuffHorizontally = (puffNumber, reverse, preDelayTics, postDelayTi
 
 exports.rotatePuffVertically = (puffNumber, reverse) => {
 
-	let rgbw = rgbwDefault;
-
 	var self = {};
-	
-	let puff = state[puffNumber];
+	let rgbw = rgbwDefault;
+	const layerId = newLayer();
 	let tic = 1;
 
 	if (reverse) {
 		tic = 3;
-	}
+	};
 
 	const output = () => {
 
-		puff['0'] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-		puff['1'] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-		puff['2'] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+		state.layers[layerId]['0'] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+		state.layers[layerId]['1'] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+		state.layers[layerId]['2'] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 
-		if (tic == 1) {puff['0'] = [rgbw,rgbw,rgbw,rgbw]};
-		if (tic == 2) {puff['1'] = [rgbw,rgbw,rgbw,rgbw]};
-		if (tic == 3) {puff['2'] = [rgbw,rgbw,rgbw,rgbw]};
+		if (tic == 1) {state.layers[layerId]['0'] = [rgbw,rgbw,rgbw,rgbw]};
+		if (tic == 2) {state.layers[layerId]['1'] = [rgbw,rgbw,rgbw,rgbw]};
+		if (tic == 3) {state.layers[layerId]['2'] = [rgbw,rgbw,rgbw,rgbw]};
 
-		
 		if (reverse) {
 			tic = tic - 1;
 		} else {
 			tic = tic + 1;
-		}
+		};
 		
 		if (reverse) {
 			if (tic == 0) {tic = 3};
 		} else {
 			if (tic == ledsInRow) {tic = 1};
-		}
-
+		};
 	};
 
 	const changeColor = (color) => {
@@ -216,9 +180,9 @@ exports.rotatePuffDiagonally = (puffNumber, mode, preDelayTics, postDelayTics) =
 		});
 	};
 
-	const changeColor = () => {
+	const changeColor = (color) => {
 		lines.map((line) => {
-			line.changeColor();
+			line.changeColor(color);
 		});
 	};
 
@@ -231,10 +195,9 @@ exports.rotatePuffDiagonally = (puffNumber, mode, preDelayTics, postDelayTics) =
 
 exports.rotateLineHorisontally = (puffNumber, lineNumber, reverse, preDelayTics, postDelayTics) => {
 
-	let rgbw = rgbwDefault;
-
 	var self = {};
-
+	let rgbw = rgbwDefault;
+	const layerId = newLayer();
 	let tics = 1;
 
 	if (preDelayTics) {
@@ -244,23 +207,43 @@ exports.rotateLineHorisontally = (puffNumber, lineNumber, reverse, preDelayTics,
 	const output = () => {
 
 		if (tics > 0 && tics < ledsInRow + 1) {
-
 			if (reverse) {
-				if (tics == 1) {
-					state[puffNumber][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], rgbw];
-				} else {
-					state[puffNumber][lineNumber].push(state[puffNumber][lineNumber].shift());
+				switch(tics) {
+					case 1:
+						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], rgbw];
+						break;
+					case 2:
+						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], rgbw, [0, 0, 0, 0]];
+						break;
+					case 3:
+						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], rgbw, [0, 0, 0, 0], [0, 0, 0, 0]];
+						break;
+					case 4:
+						state.layers[layerId][lineNumber] = [rgbw, [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+						break;
+					default:
+						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 				}
 			} else {
-				if (tics == 1) {
-					state[puffNumber][lineNumber] = [rgbw, [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-				} else {
-					state[puffNumber][lineNumber].unshift(state[puffNumber][lineNumber].pop());
+				switch(tics) {
+					case 1:
+						state.layers[layerId][lineNumber] = [rgbw, [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+						break;
+					case 2:
+						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], rgbw, [0, 0, 0, 0], [0, 0, 0, 0]];
+						break;
+					case 3:
+						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], rgbw, [0, 0, 0, 0]];
+						break;
+					case 4:
+						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], rgbw];
+						break;
+					default:
+						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 				}
 			}
-
 		} else {
-			state[puffNumber][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+			state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 		};
 
 		tics = tics + 1;
@@ -278,8 +261,6 @@ exports.rotateLineHorisontally = (puffNumber, lineNumber, reverse, preDelayTics,
 				};
 			}
 		}
-
-		// setTimeout(output, updateRate);
 	};
 
 	const changeColor = (color) => {
@@ -297,19 +278,52 @@ exports.stop = () => {
 };
 
 exports.outputOnce = () => {
-	const combinedArray = [
-		[].concat.apply([], state['0']['0']),
-		[].concat.apply([], state['0']['1']),
-		[].concat.apply([], state['0']['2'])
-	]; 
 
-	var flatArray = [].concat.apply([], combinedArray);
+	let sum = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	let allLayers = [];
 
-	artnet.set(1, 1, flatArray);
+	// Flatten layers
+	Object.keys(state.layers).map((key, index) => {
+		const combinedArray = [
+			[].concat.apply([], state.layers[key]['0']),
+			[].concat.apply([], state.layers[key]['1']),
+			[].concat.apply([], state.layers[key]['2'])
+		];
 
-  // const lineOne = flatArray.slice(0, 16);
-  // const lineTwo = flatArray.slice(16, 32);
-  // const lineThree = flatArray.slice(32, 48);
+		const flatArray = [].concat.apply([], combinedArray);
+		allLayers.push(flatArray);
+	});
+
+	// Summarize layers
+	allLayers.map((layer) => {
+		layer.map((color, i) => {
+			let newColor = 0;
+
+			if (color == 0) {
+				newColor = sum[i];
+			} else if (sum[i] == 0) {
+				newColor = color;
+			} else {
+				newColor = (sum[i] + color) / 2;
+			};
+
+			if (newColor > 255) {
+				newColor = 255;
+			} else if (newColor < 0) {
+				newColor = 0;
+			};
+
+			sum[i] = newColor;
+		});
+	});
+
+	artnet.set(1, 1, sum);
+
+	// console.log(util.inspect(state.layers, false, null));
+
+  // const lineOne = sum.slice(0, 16);
+  // const lineTwo = sum.slice(16, 32);
+  // const lineThree = sum.slice(32, 48);
 
   // console.log(lineOne);
   // console.log(lineTwo);
