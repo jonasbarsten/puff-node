@@ -11,9 +11,7 @@
     "log-update": "^2.3.0",
     "midi": "^0.9.5",
     "moment": "^2.22.1",
-    "osc": "^2.2.1",
-    "rpi-gpio": "^0.9.1",
-    "socket.io": "^2.1.0"
+    "osc": "^2.2.1"
   },
   "devDependencies": {},
   "scripts": {
