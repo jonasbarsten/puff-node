@@ -124,11 +124,15 @@ osc.listen((message, info) => {
   const item = messageArray[1]
   const ip = messageArray[2];
 
-  const department = messageArray[3] // Lights, ping or update
+  const department = messageArray[3] // Lights, ping, update, orientation or piezo
   const layer = messageArray[4]; // Layer number, alloff or allon
   const direction = messageArray[5]; // n, s, e, w, ne, nw, se or sw
   const func = messageArray[6]; // start, stop, speed, color, preOffset or postOffset
   const value = (message && message.args[0] && message.args[0].value); // 200, [255, 255, 255, 255]
+
+  if (department != lights || department != ping || department != update) {
+    return;
+  }
 
   if (department == 'ping') {
 
