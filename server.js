@@ -7,7 +7,7 @@ var moment = require('moment');
 var ledController = require('./modules/ledController.js');
 var osc = require('./modules/osc.js');
 var midi = require('./modules/midi.js');
-var gitPullOrClone = require('git-pull-or-clone')
+// var gitPullOrClone = require('git-pull-or-clone')
 
 // io.on('connection', (client) => {
 //   client.on('runFunction', (functionName, args) => {
@@ -132,13 +132,13 @@ osc.listen((message, info) => {
     return;
   };
 
-  if (department == 'update') {
-    gitPullOrClone('https://github.com/jonasbarsten/puff-node.git', '/home/pi/puff-node', (err) => {
-      if (err) throw err
-      console.log('SUCCESS!')
-    });
-    return;
-  }
+  // if (department == 'update') {
+  //   gitPullOrClone('https://github.com/jonasbarsten/puff-node.git', '/home/pi/puff-node', (err) => {
+  //     if (err) throw err
+  //     console.log('SUCCESS!')
+  //   });
+  //   return;
+  // }
 
   if (layer == 'allOn') {
     // TODO: start does not work after this when going south or north
