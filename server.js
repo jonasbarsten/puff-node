@@ -92,7 +92,6 @@ const directionMap = {
 // Waiting since not waiting would cause crashes from time to time
 setTimeout(() => {
   midi.noteListen((note, value) => {
-    console.log(note, value);
     // Piezo
     if (note == 0 || note == 1 || note == 2 || note == 3) {
       osc.send(`/puff/${state.localIp}/piezo/${note}`, [
@@ -105,7 +104,6 @@ setTimeout(() => {
   });
 
   midi.ccListen((controller, value) => {
-    console.log(controller, value);
     // Compass
     if (controller == 1) {
       osc.send(`/puff/${state.localIp}/orientation`, [
