@@ -18,7 +18,7 @@ io.on('connection', (client) => {
     shell.exec('sudo reboot');
   });
   client.on('update', () => {
-    shell.exec('cd /home/pi/puff-node && git clone && npm install && cd /home/pi/puff-client && git clone');
+    shell.exec('cd /home/pi/puff-node && git pull && npm install && cd /home/pi/puff-client && git pull');
   });
   client.on('oscSend', (address, value) => {
     osc.send(address, [
