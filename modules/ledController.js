@@ -44,7 +44,7 @@ exports.allOff = (puffNumber) => {
 };
 
 exports.allOn = (puffNumber) => {
-	state[puffNumber] = {
+	state.layers[puffNumber] = {
 		'0': [rgbwDefault, rgbwDefault, rgbwDefault, rgbwDefault],
 		'1': [rgbwDefault, rgbwDefault, rgbwDefault, rgbwDefault],
 		'2': [rgbwDefault, rgbwDefault, rgbwDefault, rgbwDefault]
