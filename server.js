@@ -90,6 +90,7 @@ const directionMap = {
 };
 
 midi.noteListen((note, value) => {
+  console.log(note, value);
   // Piezo
   if (note == 0 || note == 1 || note == 2 || note == 3) {
     osc.send(`/puff/${state.localIp}/piezo/${note}`, [
@@ -102,6 +103,7 @@ midi.noteListen((note, value) => {
 });
 
 midi.ccListen((controller, value) => {
+  console.log(controller, value);
   // Compass
   if (controller == 1) {
     osc.send(`/puff/${state.localIp}/orientation`, [
