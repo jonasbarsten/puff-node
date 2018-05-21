@@ -3,6 +3,7 @@
 var io = require('socket.io')();
 var os = require('os');
 var moment = require('moment');
+var shell = require('shelljs');
 
 var ledController = require('./modules/ledController.js');
 var osc = require('./modules/osc.js');
@@ -11,12 +12,10 @@ var midi = require('./modules/midi.js');
 
 io.on('connection', (client) => {
   client.on('runFunction', (functionName, args) => {
-    console.log(functionName);
-    console.log(args);
     ledController[functionName](...args);
   });
   client.on('restart', () => {
-    
+    shell.exec('sudo reboot');
   });
   client.on('oscSend', (address, value) => {
     osc.send(address, [
@@ -291,7 +290,5 @@ setInterval(() => {
 
   // Send state to clients
   io.sockets.emit('FromAPI', state.neighbours);
-
-  console.log(state);
 
 }, 1000);
