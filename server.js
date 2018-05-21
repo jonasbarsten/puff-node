@@ -89,31 +89,34 @@ const directionMap = {
   }
 };
 
-midi.noteListen((note, value) => {
-  console.log(note, value);
-  // Piezo
-  if (note == 0 || note == 1 || note == 2 || note == 3) {
-    osc.send(`/puff/${state.localIp}/piezo/${note}`, [
-      {
-        type: "f",
-        value: value
-      }
-    ]);
-  };
-});
+// Waiting since not waiting would cause crashes from time to time
+setTimeout(() => {
+  midi.noteListen((note, value) => {
+    console.log(note, value);
+    // Piezo
+    if (note == 0 || note == 1 || note == 2 || note == 3) {
+      osc.send(`/puff/${state.localIp}/piezo/${note}`, [
+        {
+          type: "f",
+          value: value
+        }
+      ]);
+    };
+  });
 
-midi.ccListen((controller, value) => {
-  console.log(controller, value);
-  // Compass
-  if (controller == 1) {
-    osc.send(`/puff/${state.localIp}/orientation`, [
-      {
-        type: "f",
-        value: value * 360
-      }
-    ]);
-  };
-});
+  midi.ccListen((controller, value) => {
+    console.log(controller, value);
+    // Compass
+    if (controller == 1) {
+      osc.send(`/puff/${state.localIp}/orientation`, [
+        {
+          type: "f",
+          value: value * 360
+        }
+      ]);
+    };
+  });
+}, 8000);
 
 osc.listen((message, info) => {
   state.lastOsc = {message, info};
