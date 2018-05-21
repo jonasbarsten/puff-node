@@ -11,9 +11,9 @@ var midi = require('./modules/midi.js');
 // var gitPullOrClone = require('git-pull-or-clone')
 
 io.on('connection', (client) => {
-  // client.on('runFunction', (functionName, args) => {
-  //   ledController[functionName](...args);
-  // });
+  client.on('runFunction', (functionName, args) => {
+    ledController[functionName](...args);
+  });
   client.on('restart', () => {
     shell.exec('sudo reboot');
   });
