@@ -116,9 +116,6 @@ midi.ccListen((controller, value) => {
 osc.listen((message, info) => {
   state.lastOsc = {message, info};
 
-  // console.log(message);
-  // console.log(info);
-
   const messageArray = message.address.split("/");
 
   const item = messageArray[1]
@@ -130,7 +127,9 @@ osc.listen((message, info) => {
   const func = messageArray[6]; // start, stop, speed, color, preOffset or postOffset
   const value = (message && message.args[0] && message.args[0].value); // 200, [255, 255, 255, 255]
 
-  if (department != 'lights' || department != 'ping' || department != 'update') {
+  const validIncommingDepartments = ['lights', 'ping', 'update'];
+
+  if (validIncommingDepartments.indexOf(department) == -1) {
     return;
   }
 
@@ -233,7 +232,6 @@ osc.listen((message, info) => {
       if (state.activeLayers[layer].running) {
         console.log(`Layer ${layer} is already running`);
       } else {
-        
         const runOnce = () => {
           state.activeLayers[layer].func.output();
           state.activeLayers[layer].timer = setTimeout(runOnce, state.activeLayers[layer].speed);
