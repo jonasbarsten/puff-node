@@ -2,21 +2,26 @@
 
 var easymidi = require('easymidi');
 
-var inputs = easymidi.getInputs();
+var inputs = [];
 let teensy = '';
 let input = null;
 
-// Finding teensy with piezo (Fiskehest)
-for (var i = 0; i < inputs.length; i++) {
-  let value = inputs[i];
-  if (value.substring(0, 9) === 'Fiskehest') {
-    teensy = value;
-  }
-};
+// Waiting since not waiting would cause crashes from time to time
+setTimeout(() => {
+	inputs = easymidi.getInputs();
 
-if (teensy) {
-  input = new easymidi.Input(teensy);
-};
+	// Finding teensy with piezo (Fiskehest)
+	for (var i = 0; i < inputs.length; i++) {
+	  let value = inputs[i];
+	  if (value.substring(0, 9) === 'Fiskehest') {
+	    teensy = value;
+	  }
+	};
+
+	if (teensy) {
+	  input = new easymidi.Input(teensy);
+	};
+}, 5000);
 
 exports.noteListen = (callback) => {
 	if (input) {
