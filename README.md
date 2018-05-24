@@ -1,5 +1,3 @@
-# puff-node
-
 ## OSC-API
 
 Broadcast on port 8050, both in and out.
