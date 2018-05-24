@@ -23,12 +23,7 @@ io.on('connection', (client) => {
     ledController[functionName](...args);
   });
   client.on('restart', () => {
-    // shell.exec('sudo reboot');
-    shell.exec('ls', (code, stdout, stderr) => {
-      console.log('Exit code:', code);
-      console.log('Program output:', stdout);
-      console.log('Program stderr:', stderr);
-    });
+    shell.exec('sudo reboot');
   });
   client.on('update', () => {
     shell.exec('cd /home/pi/puff-node && git pull && npm install && cd /home/pi/puff-client && git pull');
