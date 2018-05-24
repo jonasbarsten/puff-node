@@ -10,12 +10,21 @@ var osc = require('./modules/osc.js');
 var midi = require('./modules/midi.js');
 // var gitPullOrClone = require('git-pull-or-clone')
 
+// const hostName = os.hostname();
+
+// console.log(hostName);
+
 io.on('connection', (client) => {
   client.on('runFunction', (functionName, args) => {
     ledController[functionName](...args);
   });
   client.on('restart', () => {
-    shell.exec('sudo reboot');
+    // shell.exec('sudo reboot');
+    shell.exec('ls', (code, stdout, stderr) => {
+      console.log('Exit code:', code);
+      console.log('Program output:', stdout);
+      console.log('Program stderr:', stderr);
+    });
   });
   client.on('update', () => {
     shell.exec('cd /home/pi/puff-node && git pull && npm install && cd /home/pi/puff-client && git pull');
