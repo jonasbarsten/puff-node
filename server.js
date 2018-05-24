@@ -15,7 +15,7 @@ var midi = require('./modules/midi.js');
 // console.log(hostName);
 
 setTimeout(() => {
-  midi.noteSend(0, 127, 2);
+  midi.noteSend(0, 127, 1);
 }, 8000);
 
 io.on('connection', (client) => {
