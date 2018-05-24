@@ -3,8 +3,11 @@
 var easymidi = require('easymidi');
 
 var inputs = [];
+// Inputs == outputs
+// var outputs = [];
 let teensy = '';
 let input = null;
+let output = null;
 
 // Waiting since not waiting would cause crashes from time to time
 setTimeout(() => {
@@ -20,6 +23,7 @@ setTimeout(() => {
 
 	if (teensy) {
 	  input = new easymidi.Input(teensy);
+	  output = new easymidi.Output(teensy);
 	};
 
 	exports.noteListen = (callback) => {
@@ -43,6 +47,18 @@ setTimeout(() => {
 			});
 		} else {
 			callback('No teensy found', null);
+		}
+	};
+
+	exports.noteSend = (note, velocity, channel) => {
+		if (input) {
+			output.send('noteon', {
+			  note: note,
+			  velocity: velocity,
+			  channel: channel
+			});
+		} else {
+			console.log('No teensy found');
 		}
 	};
 

@@ -14,6 +14,10 @@ var midi = require('./modules/midi.js');
 
 // console.log(hostName);
 
+setTimeout(() => {
+  midi.noteSend(0, 127, 2);
+}, 8000);
+
 io.on('connection', (client) => {
   client.on('runFunction', (functionName, args) => {
     ledController[functionName](...args);
