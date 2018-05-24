@@ -6,7 +6,7 @@ ex. in Max/MSP: `[udpsend 10.0.255.255 8050]` and `[udpreceive 8050]`
 
 Out:
 
-|---|---|---|
+||||
 |/puff/{ip}/piezo/{0-7}|velocity 0.-1.|Float|
 |/puff/{ip}/orientation|0 - 360 degrees|Int|
 |/puff/{ip}/ping|date|Int|
@@ -14,7 +14,7 @@ Out:
 
 In:
 
-|---|---|---|---|---|
+||||||
 |/puff/{ip}/lights/|allOn|
 |/puff/{ip}/lights/|allOff|
 |/puff/{ip}/lights/|layer|Int|start
