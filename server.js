@@ -15,7 +15,7 @@ var midi = require('./modules/midi.js');
 // console.log(hostName);
 
 const update = () => {
-  shell.exec('cd /home/pi/puff-node && git fetch --all && npm install && cd /home/pi/puff-client && git fetch --all');
+  shell.exec('cd /home/pi/puff-node && git pull && npm install && cd /home/pi/puff-client && git pull');
 };
 
 setTimeout(() => {
