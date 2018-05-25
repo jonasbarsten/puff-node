@@ -3,7 +3,8 @@
 Broadcast on port 8050, both in and out.
 
 ex. in Max/MSP: `[udpsend 10.0.255.255 8050]` and `[udpreceive 8050]`
-This works in association with the [Client repo](https://github.com/jonasbarsten/puff-client)
+
+This works in association with the [client repo](https://github.com/jonasbarsten/puff-client)
 
 |OUT|||
 |---|---|---|
