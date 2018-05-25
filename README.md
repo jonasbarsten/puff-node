@@ -12,6 +12,7 @@ ex. in Max/MSP: `[udpsend 10.0.255.255 8050]` and `[udpreceive 8050]`
 
 |IN|||||Default|
 |---|---|---|---|---|---|
+|/puff/{ip}/update||
 |/puff/{ip}/cableLight/|Float|
 |/puff/{ip}/lights/|allOn|
 |/puff/{ip}/lights/|allOff|

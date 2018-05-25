@@ -27,6 +27,11 @@ io.on('connection', (client) => {
   client.on('update', () => {
     update();
   });
+  client.on('updateAll', () => {
+    state.neighbours.map((neighbour) => {
+      osc.send(`/puff/${neighbour.ip}/update`);
+    });
+  });
   client.on('oscSend', (address, value) => {
     osc.send(address, [
       {
