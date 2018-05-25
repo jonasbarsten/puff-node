@@ -10,7 +10,7 @@ var osc = require('./modules/osc.js');
 var midi = require('./modules/midi.js');
 
 const update = () => {
-  shell.exec('cd /home/pi/puff-node && git pull && npm install && cd /home/pi/puff-client && git pull');
+  shell.exec('cd /home/pi/puff-node && git pull && npm install && cd /home/pi/puff-client && git pull && sudo reboot');
 };
 
 setTimeout(() => {

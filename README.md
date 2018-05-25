@@ -3,7 +3,7 @@
 Broadcast on port 8050, both in and out.
 
 ex. in Max/MSP: `[udpsend 10.0.255.255 8050]` and `[udpreceive 8050]`
-
+[Github](https://github.com/jonasbarsten/puff-client)
 |OUT|||
 |---|---|---|
 |/puff/{ip}/piezo/{0-7}|velocity 0.-1.|Float|
@@ -31,4 +31,12 @@ ex. in Max/MSP: `[udpsend 10.0.255.255 8050]` and `[udpreceive 8050]`
 * Main switch: 10.0.0.2
 * Main Mac: 10.0.0.10
 * UNMS: 10.0.0.11
+
+## Front repo:
+
+* [Github](https://github.com/jonasbarsten/puff-client)
 * Puff GUI: http://puff.local:5000
+
+Deploy:
+
+* yarn build
