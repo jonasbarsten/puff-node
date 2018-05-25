@@ -81,7 +81,14 @@ exports.rotatePuffHorizontally = (puffNumber, reverse, preDelayTics, postDelayTi
 		});
 	};
 
+	const kill = () => {
+		lines.map((line) => {
+			line.kill();
+		});
+	};
+
 	self.output = output;
+	self.kill = kill;
 	self.changeColor = changeColor;
 
 	return self;
@@ -126,8 +133,13 @@ exports.rotatePuffVertically = (puffNumber, reverse) => {
 		rgbw = color;
 	};
 
+	const kill = () => {
+		delete state.layers[layerId];
+	};
+
 	self.output = output;
 	self.changeColor = changeColor;
+	self.kill = kill;
 
 	return self;
 
@@ -186,7 +198,14 @@ exports.rotatePuffDiagonally = (puffNumber, mode, preDelayTics, postDelayTics) =
 		});
 	};
 
+	const kill = () => {
+		lines.map((line) => {
+			line.kill();
+		});
+	};
+
 	self.output = output;
+	self.kill = kill;
 	self.changeColor = changeColor;
 
 	return self;
@@ -267,7 +286,12 @@ exports.rotateLineHorisontally = (puffNumber, lineNumber, reverse, preDelayTics,
 		rgbw = color;
 	};
 
+	const kill = () => {
+		delete state.layers[layerId];
+	}
+
 	self.output = output;
+	self.kill = kill;
 	self.changeColor = changeColor;
 
 	return self;

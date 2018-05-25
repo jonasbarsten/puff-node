@@ -343,6 +343,8 @@ osc.listen((message, info) => {
             let args = programMap[value].args;
 
             if (command && args) {
+              // Deleting relevant layers from state in ledController
+              state.activeLayers[layerNumber].func.kill();
               // The timer runs the chained output function of the function in the layer
               state.activeLayers[layerNumber].func = ledController[command](...args);
             }
