@@ -18,8 +18,8 @@ This works in association with the [client repo](https://github.com/jonasbarsten
 |/puff/{ip}/update|`see below`|
 |/puff/{ip}/cableLight|Float|
 |/puff/{ip}/lights/global|clearAll|
-|/puff/{ip}/lights/layer/{i}|start|
-|/puff/{ip}/lights/layer/{i}|stop|
+|/puff/{ip}/lights/layer/{i}/start||false|
+|/puff/{ip}/lights/layer/{i}/stop||true|
 |/puff/{ip}/lights/layer/{i}/speed|Int `ms to next tic`|500|
 |/puff/{ip}/lights/layer/{i}/color|String `"255 255 255 255"`|10 10 10 10|
 |/puff/{ip}/lights/layer/{i}/program|String `line-s/line-n/line-e/line-w/line-ne/line-nw/line-se/line-sw/random/allOn/allOff`|line-s|
