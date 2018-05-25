@@ -14,6 +14,10 @@ var midi = require('./modules/midi.js');
 
 // console.log(hostName);
 
+const update = () => {
+  shell.exec('cd /home/pi/puff-node && git fetch --all && npm install && cd /home/pi/puff-client && git fetch --all');
+};
+
 setTimeout(() => {
   midi.noteSend(0, 127, 1);
 }, 8000);
@@ -26,7 +30,7 @@ io.on('connection', (client) => {
     shell.exec('sudo reboot');
   });
   client.on('update', () => {
-    shell.exec('cd /home/pi/puff-node && git pull && npm install && cd /home/pi/puff-client && git pull');
+    update();
   });
   client.on('oscSend', (address, value) => {
     osc.send(address, [
@@ -179,13 +183,10 @@ osc.listen((message, info) => {
     return;
   };
 
-  // if (department == 'update') {
-  //   gitPullOrClone('https://github.com/jonasbarsten/puff-node.git', '/home/pi/puff-node', (err) => {
-  //     if (err) throw err
-  //     console.log('SUCCESS!')
-  //   });
-  //   return;
-  // }
+  if (department == 'update') {
+    update();
+    return;
+  };
 
   if (layer == 'allOn') {
     // TODO: start does not work after this when going south or north
@@ -195,7 +196,7 @@ osc.listen((message, info) => {
     });
     ledController.allOn("0");
     return;
-  }
+  };
 
   if (layer == 'allOff') {
     // TODO: start does not work after this when going south or north
@@ -205,7 +206,7 @@ osc.listen((message, info) => {
     });
     ledController.allOff("0");
     return;
-  }
+  };
 
   if (layer == 'clearAll') {
     Object.keys(state.activeLayers).map((key) => {
@@ -215,7 +216,7 @@ osc.listen((message, info) => {
     state.activeLayers = {};
     ledController.allOff("0");
     return;
-  }
+  };
 
   const validLayer = Number.isInteger(parseInt(layer));
 
