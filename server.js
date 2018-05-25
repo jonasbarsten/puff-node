@@ -346,7 +346,10 @@ osc.listen((message, info) => {
               // Deleting relevant layers from state in ledController
               state.activeLayers[layerNumber].func.kill();
               // The timer runs the chained output function of the function in the layer
+              // So we can just change the function
               state.activeLayers[layerNumber].func = ledController[command](...args);
+              // Setting color on new layer from state
+              state.activeLayers[layerNumber].func.changeColor(state.activeLayers[layerNumber].color);
             }
           }
           break;
