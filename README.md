@@ -11,13 +11,13 @@ This works in association with the [client repo](https://github.com/jonasbarsten
 |/puff/{ip}/piezo/{0-7}|velocity 0.-1.|Float|
 |/puff/{ip}/orientation|0 - 360 degrees|Int|
 |/puff/{ip}/ping|date|Int|
+|/puff/{ip}/error|message|String|
 
 |IN||||||Default|
 |---|---|---|---|---|---|---|
 |/puff/{ip}/update|`see below`||
 |/puff/{ip}/cableLight/|Float||
-|/puff/{ip}/lights/|allOn||
-|/puff/{ip}/lights/|allOff||
+|/puff/{ip}/lights/|clearAll||
 |/puff/{ip}/lights/|layer|Int|start|
 |/puff/{ip}/lights/|layer|Int|stop|
 |/puff/{ip}/lights/|layer|Int|speed|Int `ms to next tic`||500
@@ -55,3 +55,16 @@ The same front lives on all puffs and they know about each outher due to OSC pin
 Deploy:
 
 * yarn build
+
+## Pi setup
+
+/etc/rc.local
+
+```
+export PATH=/sbin:/usr/sbin:$PATH
+
+su pi -c 'serve -s /home/pi/puff-client/build' &
+su pi -c 'nodemon /home/pi/puff-node/server.js'
+
+exit 0
+```
