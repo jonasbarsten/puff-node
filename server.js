@@ -242,7 +242,6 @@ osc.listen((message, info) => {
     if (directionMap[direction]) {
       const command = directionMap[direction].cmd;
       let args = directionMap[direction].args;
-
       if (command && args) {
         // Create new instance
         state.activeLayers[layer].func = ledController[command](...args);
@@ -260,7 +259,7 @@ osc.listen((message, info) => {
       } else {
         const runOnce = () => {
           state.activeLayers[layer].func.output();
-          state.activeLayers[layer].timer = setTimeout(runOnce, state.activeLayers[layer].speed);
+          // state.activeLayers[layer].timer = setTimeout(runOnce, state.activeLayers[layer].speed);
         }
         runOnce();
         state.activeLayers[layer].running = true;
@@ -316,7 +315,11 @@ setInterval(() => {
     };
   }); 
 
+  // Removing active layers from what is emitted to client since the timers live there and that would cause "RangeError: Maximum call stack size exceeded" in socket.io
+  let reducedState = Object.assign({}, state);
+  delete reducedState.activeLayers;
+
   // Send state to clients
-  io.sockets.emit('FromAPI', state);
+  io.sockets.emit('FromAPI', reducedState);
 
 }, 1000);

@@ -22,7 +22,8 @@ This works in association with the [client repo](https://github.com/jonasbarsten
 |/puff/{ip}/lights/|layer|Int|stop
 |/puff/{ip}/lights/|layer|Int|speed|Int `ms to next tic`|500
 |/puff/{ip}/lights/|layer|Int|color|String `"255 255 255 255"`|10 10 10 10
-|/puff/{ip}/lights/|layer|Int|direction|String `s/n/e/w/ne/nw/se/sw`|s
+|/puff/{ip}/lights/|layer|Int|program|String `line-s/line-n/line-e/line-w/line-ne/line-nw/line-se/line-sw/random/allOn/allOff`|line-s
+|/puff/{ip}/lights/|layer|Int|interaction|String `line-s/line-n/line-e/line-w/line-ne/line-nw/line-se/line-sw/random/allOn/allOff`|line-s
 |/puff/{ip}/lights/|layer|Int|preOffset|Int `tics`|0
 |/puff/{ip}/lights/|layer|Int|postOffset|Int `tics`|0
 
