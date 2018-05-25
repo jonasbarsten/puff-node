@@ -134,13 +134,13 @@ osc.listen((message, info) => {
   const item = messageArray[1]
   const ip = messageArray[2];
 
-  const department = messageArray[3] // Lights, ping, update, orientation or piezo
-  const layer = messageArray[4]; // Layer number, alloff or allon
+  const department = messageArray[3] // lights, cableLight, ping, update, orientation or piezo
+  const layer = messageArray[4]; // Layer number, allOff or allOn
   const direction = messageArray[5]; // n, s, e, w, ne, nw, se or sw
   const func = messageArray[6]; // start, stop, speed, color, preOffset or postOffset
   const value = (message && message.args[0] && message.args[0].value); // 200, [255, 255, 255, 255]
 
-  const validIncommingDepartments = ['lights', 'ping', 'update'];
+  const validIncommingDepartments = ['lights', 'ping', 'update', 'cableLight'];
 
   if (validIncommingDepartments.indexOf(department) == -1) {
     return;
@@ -165,6 +165,17 @@ osc.listen((message, info) => {
 
   // Break if message isn't intended for current server
   if (state.localIp != ip || item != 'puff') {
+    return;
+  };
+
+  if (department == 'cableLight') {
+    let velocity = Math.round(127 * value);
+    if (velocity < 0) {
+      velocity = 0;
+    } else if (velocity > 127) {
+      velocity = 127;
+    };
+    midi.noteSend(0, velocity, 1);
     return;
   };
 
