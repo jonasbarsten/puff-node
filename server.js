@@ -305,7 +305,7 @@ osc.listen((message, info) => {
 
     } else {
       // Update layer
-      switch (func) {
+      switch (layerFunc) {
         case 'start':
           if (state.activeLayers[layerNumber].running) {
             console.log(`Layer ${layerNumber} is already running`);
