@@ -31,3 +31,4 @@ ex. in Max/MSP: `[udpsend 10.0.255.255 8050]` and `[udpreceive 8050]`
 * Main switch: 10.0.0.2
 * Main Mac: 10.0.0.10
 * UNMS: 10.0.0.11
+* Puff GUI: http://puff.local:5000

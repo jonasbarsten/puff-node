@@ -8,11 +8,6 @@ var shell = require('shelljs');
 var ledController = require('./modules/ledController.js');
 var osc = require('./modules/osc.js');
 var midi = require('./modules/midi.js');
-// var gitPullOrClone = require('git-pull-or-clone')
-
-// const hostName = os.hostname();
-
-// console.log(hostName);
 
 const update = () => {
   shell.exec('cd /home/pi/puff-node && git pull && npm install && cd /home/pi/puff-client && git pull');
@@ -65,6 +60,7 @@ let state = {
   lastMidi: {},
   lastOsc: {},
   localIp: getIp(),
+  hostName: os.hostname(),
   neighbours: [],
 };
 
@@ -316,6 +312,6 @@ setInterval(() => {
   }); 
 
   // Send state to clients
-  io.sockets.emit('FromAPI', state.neighbours);
+  io.sockets.emit('FromAPI', state);
 
 }, 1000);
