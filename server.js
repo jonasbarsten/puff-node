@@ -301,6 +301,13 @@ osc.listen((message, info) => {
       state.activeLayers[layerNumber].func = ledController[command](...args);
 
       //TODO: start if running is true
+      if (state.activeLayers[layerNumber].running) {
+        const runOnce = () => {
+          state.activeLayers[layerNumber].func.output();
+          state.activeLayers[layerNumber].timer = setTimeout(runOnce, state.activeLayers[layerNumber].speed);
+        };
+        runOnce();
+      };
 
 
     } else {
@@ -313,7 +320,7 @@ osc.listen((message, info) => {
             const runOnce = () => {
               state.activeLayers[layerNumber].func.output();
               state.activeLayers[layerNumber].timer = setTimeout(runOnce, state.activeLayers[layerNumber].speed);
-            }
+            };
             runOnce();
             state.activeLayers[layerNumber].running = true;
           };
