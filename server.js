@@ -265,7 +265,11 @@ osc.listen((message, info) => {
       state.activeLayers[layer].speed = value;
       break;
     case 'color':
-      const color = JSON.parse("[" + value + "]");
+      let valueList = value;
+      for(var i = 0; i < valueList.length; i++) {
+       valueList = valueList.replace(" ", ",");
+      };
+      const color = JSON.parse("[" + valueList + "]");
       state.activeLayers[layer].color = color;
       state.activeLayers[layer].func.changeColor(color);
       break;
