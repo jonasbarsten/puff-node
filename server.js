@@ -259,7 +259,7 @@ osc.listen((message, info) => {
       } else {
         const runOnce = () => {
           state.activeLayers[layer].func.output();
-          // state.activeLayers[layer].timer = setTimeout(runOnce, state.activeLayers[layer].speed);
+          state.activeLayers[layer].timer = setTimeout(runOnce, state.activeLayers[layer].speed);
         }
         runOnce();
         state.activeLayers[layer].running = true;
