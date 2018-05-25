@@ -13,6 +13,15 @@ const update = () => {
   shell.exec('cd /home/pi/puff-node && git pull && npm install && cd /home/pi/puff-client && git pull && sudo reboot');
 };
 
+const oscError = (msg) => {
+  osc.send(`/puff/${state.localIp}/error`, [
+    {
+      type: "s",
+      value: msg
+    }
+  ]);
+}
+
 setTimeout(() => {
   midi.noteSend(0, 127, 1);
 }, 8000);
@@ -69,38 +78,50 @@ let state = {
   neighbours: [],
 };
 
-const directionMap = {
-  n: {
+const programMap = {
+  'line-n': {
     cmd: 'rotatePuffVertically',
     args: ['0']
   },
-  s: {
+  'line-s': {
     cmd: 'rotatePuffVertically',
     args: ['0', 1]
   },
-  e: {
+  'line-e': {
     cmd: 'rotatePuffHorizontally',
     args: ['0', 1]
   },
-  w: {
+  'line-w': {
     cmd: 'rotatePuffHorizontally',
     args: ['0']
   },
-  nw: {
+  'line-nw': {
     cmd: 'rotatePuffDiagonally',
     args: ['0', 1]
   },
-  ne: {
+  'line-ne': {
     cmd: 'rotatePuffDiagonally',
     args: ['0', 2]
   },
-  sw: {
+  'line-sw': {
     cmd: 'rotatePuffDiagonally',
     args: ['0', 3]
   },
-  se: {
+  'line-se': {
     cmd: 'rotatePuffDiagonally',
     args: ['0', 4]
+  },
+  'random': {
+    cmd: 'random',
+    args: ['0']
+  },
+  'allOn': {
+    cmd: 'allOn',
+    args: ['0']
+  },
+  'allOff': {
+    cmd: 'allOff',
+    args: ['0']
   }
 };
 
@@ -136,13 +157,13 @@ osc.listen((message, info) => {
 
   const messageArray = message.address.split("/");
 
-  const item = messageArray[1]
-  const ip = messageArray[2];
-
+  const item = messageArray[1] // puff
+  const ip = messageArray[2]; // 10.0.128.142 ...
   const department = messageArray[3] // lights, cableLight, ping, update, orientation or piezo
-  const layer = messageArray[4]; // Layer number, allOff or allOn
-  const direction = messageArray[5]; // n, s, e, w, ne, nw, se or sw
-  const func = messageArray[6]; // start, stop, speed, color, preOffset or postOffset
+  const lightsGroup = messageArray[4]; // layer or global
+  const layerNumber = messageArray[5]; // 1, 2, 3, 4 ...
+  const layerFunc = messageArray[6]; // start, stop, speed, color, program, piezo, magneticNorth, preOffset or postOffset
+
   const value = (message && message.args[0] && message.args[0].value); // 200, [255, 255, 255, 255]
 
   const validIncommingDepartments = ['lights', 'ping', 'update', 'cableLight'];
@@ -189,110 +210,195 @@ osc.listen((message, info) => {
     return;
   };
 
-  if (layer == 'allOn') {
-    // TODO: start does not work after this when going south or north
-    Object.keys(state.activeLayers).map((key) => {
-      clearTimeout(state.activeLayers[key].timer);
-      state.activeLayers[key].running = false;
-    });
-    ledController.allOn("0");
-    return;
+  if (lightsGroup == 'global') {
+    if (value == 'clearAll') {
+      Object.keys(state.activeLayers).map((key) => {
+        clearTimeout(state.activeLayers[key].timer);
+        state.activeLayers[key].running = false;
+      });
+      state.activeLayers = {};
+      ledController.allOff("0");
+      return;
+    };
   };
 
-  if (layer == 'allOff') {
-    // TODO: start does not work after this when going south or north
-    Object.keys(state.activeLayers).map((key) => {
-      clearTimeout(state.activeLayers[key].timer);
-      state.activeLayers[key].running = false;
-    });
-    ledController.allOff("0");
-    return;
-  };
-
-  if (layer == 'clearAll') {
-    Object.keys(state.activeLayers).map((key) => {
-      clearTimeout(state.activeLayers[key].timer);
-      state.activeLayers[key].running = false;
-    });
-    state.activeLayers = {};
-    ledController.allOff("0");
-    return;
-  };
-
-  const validLayer = Number.isInteger(parseInt(layer));
-
-  if (!validLayer) {
-    console.log('Not a valid layer');
-    return;
-  };
-
-  const layerIsActive = state.activeLayers[layer];
-
-  if (!layerIsActive) {
-    state.activeLayers[layer] = {
-      speed: 500,
-      running: false,
-      color: [20,20,20,20],
-      preOffset: 0,
-      postOffset: 0,
-      timer: null,
-      func: null
+  if (lightsGroup == 'layer') {
+    const validLayer = Number.isInteger(parseInt(layerNumber));
+    if (!validLayer) {
+      console.log('Not a valid layer');
+      oscError('Not a valid layer number (ex. 2)');
+      return;
     };
 
-    if (directionMap[direction]) {
-      const command = directionMap[direction].cmd;
-      let args = directionMap[direction].args;
-      if (command && args) {
-        // Create new instance
-        state.activeLayers[layer].func = ledController[command](...args);
-      }  else {
-        console.log('Unknown direction');
+    const layerIsActive = state.activeLayers[layerNumber];
+
+    // New layer
+    if (!layerIsActive) {
+      let newLayer = {
+        speed: 500,
+        running: false,
+        color: [20, 20, 20, 20],
+        preOffset: 0,
+        postOffset: 0,
+        piezo: false,
+        magneticNorth: false,
+        timer: null,
+        func: null,
+        program: 'line-s'
+      };
+
+      // TODO: validation on every case
+      switch (layerFunc) {
+        case 'start':
+          newLayer.running = true;
+          break;
+        case 'stop':
+          newLayer.running = false;
+          break;
+        case 'speed':
+          newLayer.speed = value;
+          break;
+        case 'color':
+          let valueList = value;
+          for(var i = 0; i < valueList.length; i++) {
+           valueList = valueList.replace(" ", ",");
+          };
+          const color = JSON.parse("[" + valueList + "]");
+          newLayer.color = color;
+          break;
+        case 'program':
+          if (programMap[value]) {
+            newLayer.program = value;
+          };
+          break;
+        case 'piezo':
+          // Converting string to bool
+          const isPiezoTrue = (value == 'true');
+          newLayer.piezo = isPiezoTrue;
+          break;
+        case 'magneticNorth':
+          // Converting string to bool
+          const isMagneticNorthTrue = (value == 'true');
+          newLayer.magneticNorth = isMagneticNorthTrue;
+          break;
+        case 'preOffset':
+          newLayer.preOffset = value;
+          break;
+        case 'postOffset':
+          newLayer.postOffset = value;
+          break;
+        default:
+          console.log('Unknown layer function');
+          oscError('Unknown layer function')
+          break;
       }
 
-    }
+      let command = programMap[newLayer.program].cmd;
+      let args = programMap[newLayer.program].args;
+
+      state.activeLayers[layerNumber] = newLayer;
+      // Create new instance
+      state.activeLayers[layerNumber].func = ledController[command](...args);
+
+      //TODO: start if running is true
+
+
+    } else {
+      // Update layer
+      switch (func) {
+        case 'start':
+          if (state.activeLayers[layerNumber].running) {
+            console.log(`Layer ${layerNumber} is already running`);
+          } else {
+            const runOnce = () => {
+              state.activeLayers[layerNumber].func.output();
+              state.activeLayers[layerNumber].timer = setTimeout(runOnce, state.activeLayers[layerNumber].speed);
+            }
+            runOnce();
+            state.activeLayers[layerNumber].running = true;
+          };
+          break;
+        case 'stop':
+          if (!state.activeLayers[layerNumber].running) {
+            console.log(`Layer ${layerNumber} is not running`);
+          } else {
+            clearTimeout(state.activeLayers[layerNumber].timer);
+            state.activeLayers[layerNumber].running = false;
+          }
+          break;
+        case 'speed':
+          state.activeLayers[layerNumber].speed = value;
+          break;
+        case 'color':
+          let valueList = value;
+          for(var i = 0; i < valueList.length; i++) {
+           valueList = valueList.replace(" ", ",");
+          };
+          const color = JSON.parse("[" + valueList + "]");
+          state.activeLayers[layerNumber].color = color;
+          state.activeLayers[layerNumber].func.changeColor(color);
+          break;
+        case 'preOffset':
+          break;
+        case 'postOffset':
+          break;
+        default:
+          console.log('Unknown layer function');
+          oscError('Unknown layer function')
+      }
+    };
+
   };
-
-  switch (func) {
-    case 'start':
-      if (state.activeLayers[layer].running) {
-        console.log(`Layer ${layer} is already running`);
-      } else {
-        const runOnce = () => {
-          state.activeLayers[layer].func.output();
-          state.activeLayers[layer].timer = setTimeout(runOnce, state.activeLayers[layer].speed);
-        }
-        runOnce();
-        state.activeLayers[layer].running = true;
-      };
-      break;
-    case 'stop':
-      if (!state.activeLayers[layer].running) {
-        console.log(`Layer ${layer} is not running`);
-      } else {
-        clearTimeout(state.activeLayers[layer].timer);
-        state.activeLayers[layer].running = false;
-      }
-      break;
-    case 'speed':
-      state.activeLayers[layer].speed = value;
-      break;
-    case 'color':
-      let valueList = value;
-      for(var i = 0; i < valueList.length; i++) {
-       valueList = valueList.replace(" ", ",");
-      };
-      const color = JSON.parse("[" + valueList + "]");
-      state.activeLayers[layer].color = color;
-      state.activeLayers[layer].func.changeColor(color);
-      break;
-    case 'preOffset':
-      break;
-    case 'postOffset':
-      break;
-    default:
-      console.log('Unknown command');
-  }
 });
+  
+
+
+
+  
+
+
+
+//   switch (func) {
+//     case 'start':
+//       if (state.activeLayers[layer].running) {
+//         console.log(`Layer ${layer} is already running`);
+//       } else {
+//         const runOnce = () => {
+//           state.activeLayers[layer].func.output();
+//           state.activeLayers[layer].timer = setTimeout(runOnce, state.activeLayers[layer].speed);
+//         }
+//         runOnce();
+//         state.activeLayers[layer].running = true;
+//       };
+//       break;
+//     case 'stop':
+//       if (!state.activeLayers[layer].running) {
+//         console.log(`Layer ${layer} is not running`);
+//       } else {
+//         clearTimeout(state.activeLayers[layer].timer);
+//         state.activeLayers[layer].running = false;
+//       }
+//       break;
+//     case 'speed':
+//       state.activeLayers[layer].speed = value;
+//       break;
+//     case 'color':
+//       let valueList = value;
+//       for(var i = 0; i < valueList.length; i++) {
+//        valueList = valueList.replace(" ", ",");
+//       };
+//       const color = JSON.parse("[" + valueList + "]");
+//       state.activeLayers[layer].color = color;
+//       state.activeLayers[layer].func.changeColor(color);
+//       break;
+//     case 'preOffset':
+//       break;
+//     case 'postOffset':
+//       break;
+//     default:
+//       console.log('Unknown command');
+//   }
+// });
 
 
 setInterval(() => {
