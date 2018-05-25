@@ -293,20 +293,21 @@ osc.listen((message, info) => {
           break;
       }
 
-      let command = programMap[newLayer.program].cmd;
-      let args = programMap[newLayer.program].args;
+      // let command = programMap[newLayer.program].cmd;
+      // let args = programMap[newLayer.program].args;
 
       state.activeLayers[layerNumber] = newLayer;
-      // Create new instance
-      state.activeLayers[layerNumber].func = ledController[command](...args);
+      // // Create new instance
+      // state.activeLayers[layerNumber].func = ledController[command](...args);
 
-      //TODO: start if running is true
+      // Starting layer with default values if initial command is "start"
       if (state.activeLayers[layerNumber].running) {
-        const runOnce = () => {
-          state.activeLayers[layerNumber].func.output();
-          state.activeLayers[layerNumber].timer = setTimeout(runOnce, state.activeLayers[layerNumber].speed);
-        };
-        runOnce();
+        startLayer(layerNumber, true);
+        // const runOnce = () => {
+        //   state.activeLayers[layerNumber].func.output();
+        //   state.activeLayers[layerNumber].timer = setTimeout(runOnce, state.activeLayers[layerNumber].speed);
+        // };
+        // runOnce();
       };
 
 
@@ -314,16 +315,7 @@ osc.listen((message, info) => {
       // Update layer
       switch (layerFunc) {
         case 'start':
-          if (state.activeLayers[layerNumber].running) {
-            console.log(`Layer ${layerNumber} is already running`);
-          } else {
-            const runOnce = () => {
-              state.activeLayers[layerNumber].func.output();
-              state.activeLayers[layerNumber].timer = setTimeout(runOnce, state.activeLayers[layerNumber].speed);
-            };
-            runOnce();
-            state.activeLayers[layerNumber].running = true;
-          };
+          startLayer(layerNumber);
           break;
         case 'stop':
           if (!state.activeLayers[layerNumber].running) {
@@ -345,6 +337,17 @@ osc.listen((message, info) => {
           state.activeLayers[layerNumber].color = color;
           state.activeLayers[layerNumber].func.changeColor(color);
           break;
+        case 'program':
+          if (programMap[value]) {
+            let command = programMap[value].cmd;
+            let args = programMap[value].args;
+
+            if (command && args) {
+              // The timer runs the chained output function of the function in the layer
+              state.activeLayers[layerNumber].func = ledController[command](...args);
+            }
+          }
+          break;
         case 'preOffset':
           break;
         case 'postOffset':
@@ -357,6 +360,28 @@ osc.listen((message, info) => {
 
   };
 });
+
+const startLayer = (layerNumber, force) => {
+
+  if (state.activeLayers[layerNumber].running && !force) {
+    console.log(`Layer ${layerNumber} already running`);
+    oscError(`Layer ${layerNumber} already running`);
+    return;
+  }
+
+  let command = programMap[state.activeLayers[layerNumber].program].cmd;
+  let args = programMap[state.activeLayers[layerNumber].program].args;
+
+  // Create new instance
+  state.activeLayers[layerNumber].func = ledController[command](...args);
+
+  const runOnce = () => {
+    state.activeLayers[layerNumber].func.output();
+    state.activeLayers[layerNumber].timer = setTimeout(runOnce, state.activeLayers[layerNumber].speed);
+  };
+  runOnce();
+  state.activeLayers[layerNumber].running = true;
+};
   
 
 
