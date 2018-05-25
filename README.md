@@ -34,9 +34,15 @@ This works in association with the [client repo](https://github.com/jonasbarsten
 
 * Subnetmask: 255.255.0.0
 * Router: 10.0.0.1
+	* ubnt:ubnt
 * Main switch: 10.0.0.2
+	* ubnt:ubnt
 * Main Mac: 10.0.0.10
+	* accordion:jonaserkul
 * UNMS: 10.0.0.11
+	* admin:Jks78aUHBkjbas?hjewkjas2323
+* LTE-modem: 192.168.1.1
+	* admin:jonaserkul
 
 ## Front repo:
 
