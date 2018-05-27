@@ -134,10 +134,10 @@ const programMap = {
 
 setTimeout(() => {
   // Starting local reserved layers
-  osc.send(`/puff/${state.localIp}/lights/layer/100/master`);
-  osc.send(`/puff/${state.localIp}/lights/layer/101/master`);
-  osc.send(`/puff/${state.localIp}/lights/layer/102/master`);
-  osc.send(`/puff/${state.localIp}/lights/layer/103/master`);
+  // osc.send(`/puff/${state.localIp}/lights/layer/100/master`);
+  // osc.send(`/puff/${state.localIp}/lights/layer/101/master`);
+  // osc.send(`/puff/${state.localIp}/lights/layer/102/master`);
+  // osc.send(`/puff/${state.localIp}/lights/layer/103/master`);
 
   // Waiting since not waiting would cause crashes from time to time
   midi.noteListen((note, value) => {
@@ -151,12 +151,12 @@ setTimeout(() => {
       ]);
 
       // Invoking local lights on piezo hit
-      osc.send(`/puff/${state.localIp}/lights/layer/${note + 100}/master`, [
-        {
-          type: "f",
-          value: value
-        }
-      ]);
+      // osc.send(`/puff/${state.localIp}/lights/layer/${note + 100}/master`, [
+      //   {
+      //     type: "f",
+      //     value: value
+      //   }
+      // ]);
 
     };
   });

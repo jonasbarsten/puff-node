@@ -133,9 +133,18 @@ exports.random = (puffNumber) => {
 	};
 
 	const output = () => {
-		state.layers[layerId]['0'] = [getRandomLed(), getRandomLed(), getRandomLed(), getRandomLed()];
-		state.layers[layerId]['1'] = [getRandomLed(), getRandomLed(), getRandomLed(), getRandomLed()];
-		state.layers[layerId]['2'] = [getRandomLed(), getRandomLed(), getRandomLed(), getRandomLed()];
+
+		const newLed = getRandomLed();
+		let rgbwPostMaster = [];
+
+		newLed.map((color) => {
+			const newColor = Number(color * master).toFixed(0);
+			rgbwPostMaster.push(Number(newColor));
+		});
+
+		state.layers[layerId]['0'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
+		state.layers[layerId]['1'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
+		state.layers[layerId]['2'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
 	};
 
 	const kill = () => {
