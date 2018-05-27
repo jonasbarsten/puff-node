@@ -129,7 +129,7 @@ exports.random = (puffNumber, mode) => {
 	};
 
 	const getRandomLed = () => {
-		return [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255)];
+		return [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255), 0];
 	};
 
 	const output = () => {
