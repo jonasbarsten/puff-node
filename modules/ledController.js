@@ -40,15 +40,55 @@ exports.setUpdateRate = (newUpdateRate) => {
 };
 
 exports.allOff = (puffNumber) => {
-	state.layers = {};
+	var self = {};
+	let rgbw = rgbwDefault;
+	const layerId = newLayer();
+
+	const output = () => {
+		state.layers[layerId]['0'] = [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]];
+		state.layers[layerId]['1'] = [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]];
+		state.layers[layerId]['2'] = [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]];
+	};
+
+	const kill = () => {
+		delete state.layers[layerId];
+	};
+
+	const changeColor = (color) => {
+		rgbw = color;
+	};
+
+	self.output = output;
+	self.kill = kill;
+	self.changeColor = changeColor;
+
+	return self;
 };
 
 exports.allOn = (puffNumber) => {
-	state.layers[puffNumber] = {
-		'0': [rgbwDefault, rgbwDefault, rgbwDefault, rgbwDefault],
-		'1': [rgbwDefault, rgbwDefault, rgbwDefault, rgbwDefault],
-		'2': [rgbwDefault, rgbwDefault, rgbwDefault, rgbwDefault]
-	}
+	var self = {};
+	let rgbw = rgbwDefault;
+	const layerId = newLayer();
+
+	const output = () => {
+		state.layers[layerId]['0'] = [rgbwDefault, rgbwDefault, rgbwDefault, rgbwDefault];
+		state.layers[layerId]['1'] = [rgbwDefault, rgbwDefault, rgbwDefault, rgbwDefault];
+		state.layers[layerId]['2'] = [rgbwDefault, rgbwDefault, rgbwDefault, rgbwDefault];
+	};
+
+	const kill = () => {
+		delete state.layers[layerId];
+	};
+
+	const changeColor = (color) => {
+		rgbw = color;
+	};
+
+	self.output = output;
+	self.kill = kill;
+	self.changeColor = changeColor;
+
+	return self;
 };
 
 exports.random = (puffNumber) => {
