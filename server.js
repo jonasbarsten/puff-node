@@ -167,7 +167,6 @@ osc.listen((message, info) => {
 
   if (message && message.args[0]) {
     if (message.args.length > 1) {
-      console.log('gogo');
       const valueArray = [];
       message.args.map((arg) => {
         valueArray.push(arg.value);

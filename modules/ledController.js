@@ -55,7 +55,7 @@ exports.random = (puffNumber) => {
 	var self = {};
 	let rgbw = rgbwDefault;
 	const layerId = newLayer();
-	let randomAmount = 0;
+	let randomAmount = 0; // 0 - 100 (0 = max random, 100 = ikke random)
 
 	const getRandomInt = (min, max) => {
 	  return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -72,9 +72,9 @@ exports.random = (puffNumber) => {
 
 		state.layers[layerId]['0'].map((led, ledNumber) => {
 			let newLed = [];
+			const dimFactor = (getRandomInt(randomAmount, 100)/100);
 			rgbw.map((color) => {
-				const min = color * randomAmount;
-				const newColor = getRandomInt(min, color);
+				const newColor = Number(color * dimFactor).toFixed(0);
 				newLed.push(newColor);
 			});
 			newColors['0'].push(newLed);
@@ -82,9 +82,9 @@ exports.random = (puffNumber) => {
 
 		state.layers[layerId]['1'].map((led, ledNumber) => {
 			let newLed = [];
+			const dimFactor = (getRandomInt(randomAmount, 100)/100);
 			rgbw.map((color) => {
-				const min = color * randomAmount;
-				const newColor = getRandomInt(min, color);
+				const newColor = Number(color * dimFactor).toFixed(0);
 				newLed.push(newColor);
 			});
 			newColors['1'].push(newLed);
@@ -92,15 +92,17 @@ exports.random = (puffNumber) => {
 
 		state.layers[layerId]['2'].map((led, ledNumber) => {
 			let newLed = [];
+			const dimFactor = (getRandomInt(randomAmount, 100)/100);
 			rgbw.map((color) => {
-				const min = color * randomAmount;
-				const newColor = getRandomInt(min, color);
+				const newColor = Number(color * dimFactor).toFixed(0);
 				newLed.push(newColor);
 			});
 			newColors['2'].push(newLed);
 		});
 
 		state.layers[layerId] = newColors;
+
+		// console.log(state.layers[layerId]);
 	};
 
 	const kill = () => {
