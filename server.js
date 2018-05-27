@@ -163,8 +163,21 @@ osc.listen((message, info) => {
   const lightsGroup = messageArray[4]; // layer or global
   const layerNumber = messageArray[5]; // 1, 2, 3, 4 ...
   const layerFunc = messageArray[6]; // start, stop, speed, color, program, piezo, magneticNorth, preOffset or postOffset
+  let value = null;
 
-  const value = (message && message.args[0] && message.args[0].value); // 200, [255, 255, 255, 255]
+  if (message && message.args[0] && message.args[0].value) {
+    if (message.args.length > 1) {
+      const valueArray = [];
+      message.args.map((arg) => {
+        valueArray.push(arg.value);
+      });
+      value = valueArray;
+    } else {
+      value = message.args[0].value;
+    }
+  };
+
+  // const value = (message && message.args[0] && message.args[0].value); // 200, [255, 255, 255, 255]
 
   const validIncommingDepartments = ['lights', 'ping', 'update', 'cableLight'];
 
@@ -260,12 +273,7 @@ osc.listen((message, info) => {
           newLayer.speed = value;
           break;
         case 'color':
-          let valueList = value;
-          for(var i = 0; i < valueList.length; i++) {
-           valueList = valueList.replace(" ", ",");
-          };
-          const color = JSON.parse("[" + valueList + "]");
-          newLayer.color = color;
+          newLayer.color = value;
           break;
         case 'program':
           if (programMap[value]) {
@@ -335,13 +343,8 @@ osc.listen((message, info) => {
           state.activeLayers[layerNumber].speed = value;
           break;
         case 'color':
-          let valueList = value;
-          for(var i = 0; i < valueList.length; i++) {
-           valueList = valueList.replace(" ", ",");
-          };
-          const color = JSON.parse("[" + valueList + "]");
-          state.activeLayers[layerNumber].color = color;
-          state.activeLayers[layerNumber].func.changeColor(color);
+          state.activeLayers[layerNumber].color = value;
+          state.activeLayers[layerNumber].func.changeColor(value);
           break;
         case 'program':
           if (programMap[value]) {
