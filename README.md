@@ -75,6 +75,9 @@ Deploy:
 
 ## Pi setup
 
+* ssh pi@ip
+	* jonaserkul
+
 Image files:
 
 * [puff_backup_2018_05_21_1423.img](https://www.dropbox.com/s/n3zod5omfpd9moo/puff_backup_2018_05_21_1423.img?dl=0)
