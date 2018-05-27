@@ -20,7 +20,7 @@ const oscError = (msg) => {
       value: msg
     }
   ]);
-}
+};
 
 setTimeout(() => {
   midi.noteSend(0, 127, 1);
@@ -37,12 +37,7 @@ io.on('connection', (client) => {
     update();
   });
   client.on('updateAll', () => {
-
     osc.send('/puff/all/update');
-
-    // state.neighbours.map((neighbour) => {
-    //   osc.send(`/puff/${neighbour.ip}/update`);
-    // });
   });
   client.on('oscSend', (address, value) => {
     osc.send(address, [
@@ -148,49 +143,7 @@ const programMap = {
   }
 };
 
-
-
-
-
 setTimeout(() => {
-
-  osc.send(`/puff/${state.localIp}/lights/layer/100/start`);
-  osc.send(`/puff/${state.localIp}/lights/layer/101/start`);
-  osc.send(`/puff/${state.localIp}/lights/layer/102/start`);
-  osc.send(`/puff/${state.localIp}/lights/layer/103/start`);
-
-  osc.send(`/puff/${state.localIp}/lights/layer/100/program`, [
-    {
-      type: "s",
-      value: "allOn"
-    }
-  ]);
-
-  osc.send(`/puff/${state.localIp}/lights/layer/100/speed`, [
-    {
-      type: "i",
-      value: 30
-    }
-  ]);
-
-  osc.send(`/puff/${state.localIp}/lights/layer/100/color`, [
-    {
-      type: "i",
-      value: 0
-    },
-    {
-      type: "i",
-      value: 0
-    },
-    {
-      type: "i",
-      value: 0
-    },
-    {
-      type: "i",
-      value: 255
-    }
-  ]);
 
   // Waiting since not waiting would cause crashes from time to time
   midi.noteListen((note, value) => {
@@ -202,14 +155,6 @@ setTimeout(() => {
           value: value
         }
       ]);
-
-      osc.send(`/puff/${state.localIp}/lights/layer/${note + 100}/master`, [
-        {
-          type: "f",
-          value: value
-        }
-      ]);
-
     };
   });
 
