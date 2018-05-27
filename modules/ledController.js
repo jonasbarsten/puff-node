@@ -75,9 +75,9 @@ exports.allOn = (puffNumber) => {
 	const layerId = newLayer();
 
 	const output = () => {
-		state.layers[layerId]['0'] = [rgbwDefault, rgbwDefault, rgbwDefault, rgbwDefault];
-		state.layers[layerId]['1'] = [rgbwDefault, rgbwDefault, rgbwDefault, rgbwDefault];
-		state.layers[layerId]['2'] = [rgbwDefault, rgbwDefault, rgbwDefault, rgbwDefault];
+		state.layers[layerId]['0'] = [rgbw, rgbw, rgbw, rgbw];
+		state.layers[layerId]['1'] = [rgbw, rgbw, rgbw, rgbw];
+		state.layers[layerId]['2'] = [rgbw, rgbw, rgbw, rgbw];
 	};
 
 	const kill = () => {
