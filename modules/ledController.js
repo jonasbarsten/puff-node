@@ -228,13 +228,20 @@ exports.rotatePuffVertically = (puffNumber, reverse) => {
 
 	const output = () => {
 
+		let rgbwPostMaster = [];
+
+		rgbw.map((color) => {
+			const newColor = Number(color * master).toFixed(0);
+			rgbwPostMaster.push(Number(newColor));
+		});
+
 		state.layers[layerId]['0'] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 		state.layers[layerId]['1'] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 		state.layers[layerId]['2'] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 
-		if (tic == 1) {state.layers[layerId]['0'] = [rgbw,rgbw,rgbw,rgbw]};
-		if (tic == 2) {state.layers[layerId]['1'] = [rgbw,rgbw,rgbw,rgbw]};
-		if (tic == 3) {state.layers[layerId]['2'] = [rgbw,rgbw,rgbw,rgbw]};
+		if (tic == 1) {state.layers[layerId]['0'] = [rgbwPostMaster,rgbwPostMaster,rgbwPostMaster,rgbwPostMaster]};
+		if (tic == 2) {state.layers[layerId]['1'] = [rgbwPostMaster,rgbwPostMaster,rgbwPostMaster,rgbwPostMaster]};
+		if (tic == 3) {state.layers[layerId]['2'] = [rgbwPostMaster,rgbwPostMaster,rgbwPostMaster,rgbwPostMaster]};
 
 		if (reverse) {
 			tic = tic - 1;
@@ -358,20 +365,27 @@ exports.rotateLineHorisontally = (puffNumber, lineNumber, reverse, preDelayTics,
 
 	const output = () => {
 
+		let rgbwPostMaster = [];
+
+		rgbw.map((color) => {
+			const newColor = Number(color * master).toFixed(0);
+			rgbwPostMaster.push(Number(newColor));
+		});
+
 		if (tics > 0 && tics < ledsInRow + 1) {
 			if (reverse) {
 				switch(tics) {
 					case 1:
-						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], rgbw];
+						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], rgbwPostMaster];
 						break;
 					case 2:
-						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], rgbw, [0, 0, 0, 0]];
+						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], rgbwPostMaster, [0, 0, 0, 0]];
 						break;
 					case 3:
-						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], rgbw, [0, 0, 0, 0], [0, 0, 0, 0]];
+						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], rgbwPostMaster, [0, 0, 0, 0], [0, 0, 0, 0]];
 						break;
 					case 4:
-						state.layers[layerId][lineNumber] = [rgbw, [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+						state.layers[layerId][lineNumber] = [rgbwPostMaster, [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 						break;
 					default:
 						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
@@ -379,16 +393,16 @@ exports.rotateLineHorisontally = (puffNumber, lineNumber, reverse, preDelayTics,
 			} else {
 				switch(tics) {
 					case 1:
-						state.layers[layerId][lineNumber] = [rgbw, [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+						state.layers[layerId][lineNumber] = [rgbwPostMaster, [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 						break;
 					case 2:
-						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], rgbw, [0, 0, 0, 0], [0, 0, 0, 0]];
+						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], rgbwPostMaster, [0, 0, 0, 0], [0, 0, 0, 0]];
 						break;
 					case 3:
-						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], rgbw, [0, 0, 0, 0]];
+						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], rgbwPostMaster, [0, 0, 0, 0]];
 						break;
 					case 4:
-						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], rgbw];
+						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], rgbwPostMaster];
 						break;
 					default:
 						state.layers[layerId][lineNumber] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
