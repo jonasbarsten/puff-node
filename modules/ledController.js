@@ -153,6 +153,18 @@ exports.random = (puffNumber, mode) => {
 				state.layers[layerId]['1'][getRandomInt(0, 3)] = rgbwPostMaster;
 				state.layers[layerId]['2'][getRandomInt(0, 3)] = rgbwPostMaster;
 				break;
+			case 3:
+				const position = getRandomInt(0, 3);
+				let newLine = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+				newLine.map((led, i) => {
+					if (i == position) {
+						newLine[i] = rgbwPostMaster;
+					};
+				});
+				state.layers[layerId]['0'] = newLine;
+				state.layers[layerId]['1'] = newLine;
+				state.layers[layerId]['2'] = newLine;
+				break;
 			default:
 				state.layers[layerId]['0'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
 				state.layers[layerId]['1'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];

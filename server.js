@@ -122,6 +122,10 @@ const programMap = {
     cmd: 'random',
     args: ['0', 2]
   },
+  'randomThree': {
+    cmd: 'random',
+    args: ['0', 3]
+  },
   'allOn': {
     cmd: 'allOn',
     args: ['0']
