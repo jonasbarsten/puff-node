@@ -51,6 +51,45 @@ exports.allOn = (puffNumber) => {
 	}
 };
 
+exports.random = (puffNumber) => {
+	var self = {};
+	let rgbw = rgbwDefault;
+	const layerId = newLayer();
+	let randomAmount = 1;
+
+	const getRandomInt = (min, max) => {
+	  return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
+	const output = () => {
+		state.layers[layerId]['0'].map((led) => {
+			led.map((color) => {
+				const min = color * randomAmount;
+				return getRandomInt(min, color);
+			});
+		});
+	};
+
+	const kill = () => {
+		delete state.layers[layerId];
+	};
+
+	const changeColor = (color) => {
+		rgbw = color;
+	};
+
+	const changeRandomAmount = (randomAmount) => {
+		randomAmount = randomAmount;
+	};
+
+	self.output = output;
+	self.changeRange = changeRange;
+	self.kill = kill;
+	self.changeColor = changeColor;
+
+	return self;
+};
+
 exports.rotatePuffHorizontally = (puffNumber, reverse, preDelayTics, postDelayTics) => {
 
 	if (!reverse) {
@@ -345,21 +384,21 @@ exports.outputOnce = () => {
 
 	// console.log(util.inspect(state.layers, false, null));
 
-  const lineOne = sum.slice(0, 16);
-  const lineTwo = sum.slice(16, 32);
-  const lineThree = sum.slice(32, 48);
+  // const lineOne = sum.slice(0, 16);
+  // const lineTwo = sum.slice(16, 32);
+  // const lineThree = sum.slice(32, 48);
 
   // console.log(lineOne);
   // console.log(lineTwo);
   // console.log(lineThree);
 
-  logUpdate(
-		`
-		 ${lineOne}
-		 ${lineTwo}
-		 ${lineThree}
-		`
-  );
+  // logUpdate(
+		// `
+		//  ${lineOne}
+		//  ${lineTwo}
+		//  ${lineThree}
+		// `
+  // );
 }
 
 exports.start = () => {

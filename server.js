@@ -244,7 +244,8 @@ osc.listen((message, info) => {
         magneticNorth: false,
         timer: null,
         func: null,
-        program: 'line-s'
+        program: 'line-s',
+        randomAmount: 1
       };
 
       // TODO: validation on every case
@@ -280,6 +281,9 @@ osc.listen((message, info) => {
           // Converting string to bool
           const isMagneticNorthTrue = (value == 'true');
           newLayer.magneticNorth = isMagneticNorthTrue;
+          break;
+        case 'randomAmount':
+          newLayer.randomAmount = randomAmount;
           break;
         case 'preOffset':
           newLayer.preOffset = value;
@@ -343,6 +347,7 @@ osc.listen((message, info) => {
           if (programMap[value]) {
             let command = programMap[value].cmd;
             let args = programMap[value].args;
+            state.activeLayers[layerNumber].program = value;
 
             if (command && args) {
               // Deleting relevant layers from state in ledController
@@ -354,6 +359,14 @@ osc.listen((message, info) => {
               state.activeLayers[layerNumber].func.changeColor(state.activeLayers[layerNumber].color);
             }
           }
+          break;
+        case 'randomAmount':
+          state.activeLayers[layerNumber].randomAmount = randomAmount;
+          if (state.activeLayers[layerNumber].program == 'random') {
+            state.activeLayers[layerNumber].func.changeRandomAmount(state.activeLayers[layerNumber].randomAmount);
+          } else {
+            console.log('Current program is not random');
+          };
           break;
         case 'preOffset':
           break;
@@ -369,6 +382,7 @@ osc.listen((message, info) => {
 });
 
 const createLayer = (layerNumber) => {
+  console.log('creating');
   let command = programMap[state.activeLayers[layerNumber].program].cmd;
   let args = programMap[state.activeLayers[layerNumber].program].args;
   // Create new instance
@@ -377,6 +391,8 @@ const createLayer = (layerNumber) => {
 
 const startLayer = (layerNumber, force) => {
 
+  console.log('starting');
+
   if (state.activeLayers[layerNumber].running && !force) {
     console.log(`Layer ${layerNumber} already running`);
     oscError(`Layer ${layerNumber} already running`);
@@ -384,6 +400,7 @@ const startLayer = (layerNumber, force) => {
   }
 
   const runOnce = () => {
+    console.log('Boom');
     state.activeLayers[layerNumber].func.output();
     state.activeLayers[layerNumber].timer = setTimeout(runOnce, state.activeLayers[layerNumber].speed);
   };
