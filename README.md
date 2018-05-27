@@ -33,7 +33,7 @@ This works in association with the [client repo](https://github.com/jonasbarsten
 |/puff/`{ip}`/lights/layer/{i}/preOffset|Int `tics`|0|
 |/puff/`{ip}`/lights/layer/{i}/postOffset|Int `tics`|0|
 
-|RESERVED|LAYER|
+|RESERVED|LAYER||
 |---|---|---|
 |piezo 1|100|---|
 |piezo 2|101|---|
