@@ -202,9 +202,13 @@ osc.listen((message, info) => {
     return;
   };
 
+  
+
   // Break if message isn't intended for current server
   if (state.localIp != ip || item != 'puff') {
-    return;
+    if (ip != 'all') {
+      return;
+    }
   };
 
   if (department == 'cableLight') {

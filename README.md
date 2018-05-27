@@ -15,19 +15,19 @@ This works in association with the [client repo](https://github.com/jonasbarsten
 
 |IN|VALUE|DEFAULT|
 |---|---|---|
-|/puff/{ip}/update|`see below`|
-|/puff/{ip}/cableLight|Float|
-|/puff/{ip}/lights/global|clearAll|
-|/puff/{ip}/lights/layer/{i}/start||false|
-|/puff/{ip}/lights/layer/{i}/stop||true|
-|/puff/{ip}/lights/layer/{i}/speed|Int `ms to next tic`|500|
-|/puff/{ip}/lights/layer/{i}/color|String `"255 255 255 255"`|10 10 10 10|
-|/puff/{ip}/lights/layer/{i}/program|String `line-s/line-n/line-e/line-w/line-ne/line-nw/line-se/line-sw/random/allOn/allOff`|line-s|
-|/puff/{ip}/lights/layer/{i}/dim|Not implemented yet|??|
-|/puff/{ip}/lights/layer/{i}/piezo|Boolean|false|
-|/puff/{ip}/lights/layer/{i}/magneticNorth|Boolean|false|
-|/puff/{ip}/lights/layer/{i}/preOffset|Int `tics`|0|
-|/puff/{ip}/lights/layer/{i}/postOffset|Int `tics`|0|
+|/puff/{ip}/`all`/update|`see below`|
+|/puff/{ip}/`all`/cableLight|Float|
+|/puff/{ip}/`all`/lights/global|clearAll|
+|/puff/{ip}/`all`/lights/layer/{i}/start||false|
+|/puff/{ip}/`all`/lights/layer/{i}/stop||true|
+|/puff/{ip}/`all`/lights/layer/{i}/speed|Int `ms to next tic`|500|
+|/puff/{ip}/`all`/lights/layer/{i}/color|String `"255 255 255 255"`|10 10 10 10|
+|/puff/{ip}/`all`/lights/layer/{i}/program|String `line-s/line-n/line-e/line-w/line-ne/line-nw/line-se/line-sw/random/allOn/allOff`|line-s|
+|/puff/{ip}/`all`/lights/layer/{i}/dim|Not implemented yet|??|
+|/puff/{ip}/`all`/lights/layer/{i}/piezo|Boolean|false|
+|/puff/{ip}/`all`/lights/layer/{i}/magneticNorth|Boolean|false|
+|/puff/{ip}/`all`/lights/layer/{i}/preOffset|Int `tics`|0|
+|/puff/{ip}/`all`/lights/layer/{i}/postOffset|Int `tics`|0|
 
 * when running `update all` from the front it will send a OSC update command to all available puffs.
 * the update command consists of `cd`, `git pull` and `sudo reboot` on both the `puff-node` and `puff-client` repos.
