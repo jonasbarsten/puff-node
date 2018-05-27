@@ -117,7 +117,7 @@ exports.allOn = (puffNumber) => {
 	return self;
 };
 
-exports.random = (puffNumber) => {
+exports.random = (puffNumber, mode) => {
 	var self = {};
 	let rgbw = rgbwDefault;
 	const layerId = newLayer();
@@ -142,9 +142,24 @@ exports.random = (puffNumber) => {
 			rgbwPostMaster.push(Number(newColor));
 		});
 
-		state.layers[layerId]['0'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
-		state.layers[layerId]['1'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
-		state.layers[layerId]['2'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
+		switch(mode) {
+			case 1:
+				state.layers[layerId]['0'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
+				state.layers[layerId]['1'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
+				state.layers[layerId]['2'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
+				break;
+			case 2:
+				state.layers[layerId]['0'][getRandomInt(0, 3)] = rgbwPostMaster;
+				state.layers[layerId]['1'][getRandomInt(0, 3)] = rgbwPostMaster;
+				state.layers[layerId]['2'][getRandomInt(0, 3)] = rgbwPostMaster;
+				break;
+			default:
+				state.layers[layerId]['0'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
+				state.layers[layerId]['1'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
+				state.layers[layerId]['2'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
+		}
+
+		
 	};
 
 	const kill = () => {
