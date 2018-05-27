@@ -23,8 +23,7 @@ This works in association with the [client repo](https://github.com/jonasbarsten
 |/puff/{ip}/lights/layer/{i}/speed|Int `ms to next tic`|500|
 |/puff/{ip}/lights/layer/{i}/color|String `"255 255 255 255"`|10 10 10 10|
 |/puff/{ip}/lights/layer/{i}/program|String `line-s/line-n/line-e/line-w/line-ne/line-nw/line-se/line-sw/random/allOn/allOff`|line-s|
-|/puff/{ip}/lights/layer/{i}/randomAmount|Float `0. - 1.`|1.|
-|/puff/{ip}/lights/layer/{i}/dim|Float `0. - 1.`|1.|
+|/puff/{ip}/lights/layer/{i}/dim|Not implemented yet|??|
 |/puff/{ip}/lights/layer/{i}/piezo|Boolean|false|
 |/puff/{ip}/lights/layer/{i}/magneticNorth|Boolean|false|
 |/puff/{ip}/lights/layer/{i}/preOffset|Int `tics`|0|
