@@ -58,7 +58,7 @@ setTimeout(() => {
 			  channel: channel
 			});
 		} else {
-			console.log('No teensy found');
+			// console.log('No teensy found');
 		}
 	};
 

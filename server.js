@@ -184,6 +184,11 @@ osc.listen((message, info) => {
     }
   };
 
+  let globalLayer = false;
+  if (ip == 'all') {
+    globalLayer = true;
+  }
+
   if (department == 'cableLight') {
     let velocity = Math.round(127 * value);
     if (velocity < 0) {
@@ -235,7 +240,8 @@ osc.listen((message, info) => {
         timer: null,
         func: null,
         program: 'line-s',
-        master: 1
+        master: 1,
+        global: globalLayer
       };
 
       // TODO: validation on every case
@@ -389,9 +395,12 @@ setInterval(() => {
     };
   }); 
 
-  // Removing active layers from what is emitted to client since the timers live there and that would cause "RangeError: Maximum call stack size exceeded" in socket.io
+  // Removing timers from active layers from what is emitted to client since that would cause "RangeError: Maximum call stack size exceeded" in socket.io
   let reducedState = Object.assign({}, state);
-  delete reducedState.activeLayers;
+  // delete reducedState.activeLayers;
+  Object.keys(reducedState.activeLayers).map((key) => {
+    delete reducedState.activeLayers[key].timer
+  });
 
   // Send state to clients
   io.sockets.emit('FromAPI', reducedState);
