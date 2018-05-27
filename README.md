@@ -72,7 +72,23 @@ Deploy:
 
 ## Pi setup
 
-/etc/rc.local
+Image files:
+
+* [puff_backup_2018_05_21_1423.img](https://www.dropbox.com/s/n3zod5omfpd9moo/puff_backup_2018_05_21_1423.img?dl=0)
+* [puff_backup_2018_05_21_1838.img](https://www.dropbox.com/s/sloj5mbn8rh5ccp/puff_backup_2018_05_21_1838.img?dl=0)
+
+SD cards created with [etcher](https://etcher.io/)
+
+After flash:
+
+```
+cd ~/puff-node
+git pull
+cd ~/puff-client
+git pull
+```
+
+/etc/rc.local:
 
 ```
 export PATH=/sbin:/usr/sbin:$PATH
