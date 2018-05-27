@@ -345,21 +345,21 @@ exports.outputOnce = () => {
 
 	// console.log(util.inspect(state.layers, false, null));
 
-  // const lineOne = sum.slice(0, 16);
-  // const lineTwo = sum.slice(16, 32);
-  // const lineThree = sum.slice(32, 48);
+  const lineOne = sum.slice(0, 16);
+  const lineTwo = sum.slice(16, 32);
+  const lineThree = sum.slice(32, 48);
 
   // console.log(lineOne);
   // console.log(lineTwo);
   // console.log(lineThree);
 
-  // logUpdate(
-		// `
-		//  ${lineOne}
-		//  ${lineTwo}
-		//  ${lineThree}
-		// `
-  // );
+  logUpdate(
+		`
+		 ${lineOne}
+		 ${lineTwo}
+		 ${lineThree}
+		`
+  );
 }
 
 exports.start = () => {

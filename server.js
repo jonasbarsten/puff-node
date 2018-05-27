@@ -297,6 +297,8 @@ osc.listen((message, info) => {
       // let args = programMap[newLayer.program].args;
 
       state.activeLayers[layerNumber] = newLayer;
+      createLayer(layerNumber);
+      console.log(state);
       // // Create new instance
       // state.activeLayers[layerNumber].func = ledController[command](...args);
 
@@ -366,6 +368,13 @@ osc.listen((message, info) => {
   };
 });
 
+const createLayer = (layerNumber) => {
+  let command = programMap[state.activeLayers[layerNumber].program].cmd;
+  let args = programMap[state.activeLayers[layerNumber].program].args;
+  // Create new instance
+  state.activeLayers[layerNumber].func = ledController[command](...args);
+};
+
 const startLayer = (layerNumber, force) => {
 
   if (state.activeLayers[layerNumber].running && !force) {
@@ -373,12 +382,6 @@ const startLayer = (layerNumber, force) => {
     oscError(`Layer ${layerNumber} already running`);
     return;
   }
-
-  let command = programMap[state.activeLayers[layerNumber].program].cmd;
-  let args = programMap[state.activeLayers[layerNumber].program].args;
-
-  // Create new instance
-  state.activeLayers[layerNumber].func = ledController[command](...args);
 
   const runOnce = () => {
     state.activeLayers[layerNumber].func.output();
