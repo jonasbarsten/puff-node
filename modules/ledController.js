@@ -500,9 +500,9 @@ exports.outputOnce = () => {
   // );
 }
 
-// exports.start = () => {
-// 	this.outputOnce();
-// 	mainTimer = setTimeout(this.start, outputRate);
-// };
+exports.start = () => {
+	this.outputOnce();
+	mainTimer = setTimeout(this.start, outputRate);
+};
 
-// this.start();
+this.start();
