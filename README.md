@@ -8,10 +8,10 @@ This works in association with the [client repo](https://github.com/jonasbarsten
 
 |OUT|||
 |---|---|---|
-|/puff/{ip}/piezo/{0-7}|velocity 0.-1.|Float|
-|/puff/{ip}/orientation|0 - 360 degrees|Int|
-|/puff/{ip}/ping|date|Int|
-|/puff/{ip}/error|message|String|
+|/puff/`{ip}`/piezo/{0-7}|velocity 0.-1.|Float|
+|/puff/`{ip}`/orientation|0 - 360 degrees|Int|
+|/puff/`{ip}`/ping|date|Int `Unix timestamp`|
+|/puff/`{ip}`/error|message|String|
 
 |IN|VALUE|DEFAULT|
 |---|---|---|
