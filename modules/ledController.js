@@ -39,6 +39,10 @@ exports.setUpdateRate = (newUpdateRate) => {
 	updateRate = newUpdateRate;
 };
 
+exports.clearAll = (puffNumber) => {
+	state.layers = {};
+};
+
 exports.allOff = (puffNumber) => {
 	var self = {};
 	let rgbw = rgbwDefault;

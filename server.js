@@ -230,7 +230,7 @@ osc.listen((message, info) => {
         state.activeLayers[key].running = false;
       });
       state.activeLayers = {};
-      ledController.allOff("0");
+      ledController.clearAll("0");
       return;
     };
   };
