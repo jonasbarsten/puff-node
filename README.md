@@ -12,6 +12,8 @@ This works in association with the [client repo](https://github.com/jonasbarsten
 |/puff/`{ip}`/orientation|0 - 360 degrees|Int|
 |/puff/`{ip}`/ping|date|Int `Unix timestamp`|
 |/puff/`{ip}`/error|message|String|
+|/ableton/`{ip}`/volume|Float `0. - 1.`|---|
+|/ableton/`{ip}`/bpm|Int|---|
 
 |IN|VALUE|DEFAULT|
 |---|---|---|
@@ -31,6 +33,14 @@ This works in association with the [client repo](https://github.com/jonasbarsten
 |/puff/`{ip}`/lights/layer/{i}/preOffset|Int `tics`|0|
 |/puff/`{ip}`/lights/layer/{i}/postOffset|Int `tics`|0|
 
+|RESERVED|LAYER|
+|---|---|---|
+|piezo 1|100|---|
+|piezo 2|101|---|
+|piezo 3|102|---|
+|piezo 4|103|---|
+
+* layer 100 = `piezo`
 * change `{ip}` to `all` to address all available puffs
 * when running `update all` from the front it will send a OSC update command to all available puffs.
 * the update command consists of `cd`, `git pull` and `sudo reboot` on both the `puff-node` and `puff-client` repos.
