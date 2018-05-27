@@ -116,15 +116,27 @@ const programMap = {
   },
   'random': {
     cmd: 'random',
-    args: ['0', 1]
+    args: ['0', 1, true]
   },
   'randomTwo': {
     cmd: 'random',
-    args: ['0', 2]
+    args: ['0', 2, true]
   },
   'randomThree': {
     cmd: 'random',
-    args: ['0', 3]
+    args: ['0', 3, true]
+  },
+  'randomFour': {
+    cmd: 'random',
+    args: ['0', 1, false]
+  },
+  'randomFive': {
+    cmd: 'random',
+    args: ['0', 2, false]
+  },
+  'randomSix': {
+    cmd: 'random',
+    args: ['0', 3, false]
   },
   'allOn': {
     cmd: 'allOn',

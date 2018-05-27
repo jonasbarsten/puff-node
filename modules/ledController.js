@@ -117,7 +117,10 @@ exports.allOn = (puffNumber) => {
 	return self;
 };
 
-exports.random = (puffNumber, mode) => {
+exports.random = (puffNumber, mode, randomColor) => {
+
+	// randomColor = true/false
+
 	var self = {};
 	let rgbw = rgbwDefault;
 	const layerId = newLayer();
@@ -129,7 +132,22 @@ exports.random = (puffNumber, mode) => {
 	};
 
 	const getRandomLed = () => {
-		return [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255), 0];
+		let led = [];
+
+		if (randomColor) {
+			// No white because that's cooler
+			led = [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255), 0];
+		} else {
+			let randomIntensityLed = [];
+			rgbw.map((color) => {
+				const newColor = Number(color * Math.random()).toFixed(0);
+				randomIntensityLed.push(Number(newColor));
+			});
+
+			led = randomIntensityLed;
+		};
+
+		return led;
 	};
 
 	const output = () => {
