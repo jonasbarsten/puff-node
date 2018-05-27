@@ -34,6 +34,17 @@ This works in association with the [client repo](https://github.com/jonasbarsten
 
 ## Accordion spesific:
 
+|NAME|MAC|IP|
+|---|---|---|
+|puff-1|b8:27:eb:6d:6d:d9|10.0.128.121|
+|puff-2|b8:27:eb:ba:3e:3e|10.0.128.129|
+|puff-3|b8:27:eb:63:69:1b|10.0.128.131|
+|puff-4|b8:27:eb:4d:54:e6|10.0.128.139|
+|puff-5|b8:27:eb:14:e9:2b|10.0.128.140|
+|puff-6|b8:27:eb:d6:f7:cb|10.0.128.142|
+|puff-7|b8:27:eb:5d:1d:59|10.0.128.119|
+|puff-8|b8:27:eb:5c:75:90|10.0.128.145|
+
 * Subnetmask: 255.255.0.0
 * Router: 10.0.0.1
 	* ubnt:ubnt
@@ -46,7 +57,7 @@ This works in association with the [client repo](https://github.com/jonasbarsten
 * LTE-modem: 192.168.1.1
 	* admin:jonaserkul
 
-Puffs MUST be connected after main rack has booted
+Puffs MUST be connected after main rack has booted!
 
 ## Front repo:
 
