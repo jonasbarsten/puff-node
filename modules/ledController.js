@@ -11,7 +11,7 @@ const numberOfPuffs = 4;
 const ledsInRow = 4;
 const outputRate = 30;
 let updateRate = 500;
-const rgbwDefault = [10,10,10,10];
+const rgbwDefault = [20,20,20,20];
 let rgbwSum = [0,0,0,0];
 let mainTimer = null;
 
@@ -55,19 +55,52 @@ exports.random = (puffNumber) => {
 	var self = {};
 	let rgbw = rgbwDefault;
 	const layerId = newLayer();
-	let randomAmount = 1;
+	let randomAmount = 0;
 
 	const getRandomInt = (min, max) => {
 	  return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 
+	state.layers[layerId]['0'] = [rgbw, rgbw, rgbw, rgbw];
+	state.layers[layerId]['1'] = [rgbw, rgbw, rgbw, rgbw];
+	state.layers[layerId]['2'] = [rgbw, rgbw, rgbw, rgbw];
+
 	const output = () => {
-		state.layers[layerId]['0'].map((led) => {
-			led.map((color) => {
+
+		// TODO: do this smarter
+		let newColors = {'0':[], '1':[], '2':[]};
+
+		state.layers[layerId]['0'].map((led, ledNumber) => {
+			let newLed = [];
+			rgbw.map((color) => {
 				const min = color * randomAmount;
-				return getRandomInt(min, color);
+				const newColor = getRandomInt(min, color);
+				newLed.push(newColor);
 			});
+			newColors['0'].push(newLed);
 		});
+
+		state.layers[layerId]['1'].map((led, ledNumber) => {
+			let newLed = [];
+			rgbw.map((color) => {
+				const min = color * randomAmount;
+				const newColor = getRandomInt(min, color);
+				newLed.push(newColor);
+			});
+			newColors['1'].push(newLed);
+		});
+
+		state.layers[layerId]['2'].map((led, ledNumber) => {
+			let newLed = [];
+			rgbw.map((color) => {
+				const min = color * randomAmount;
+				const newColor = getRandomInt(min, color);
+				newLed.push(newColor);
+			});
+			newColors['2'].push(newLed);
+		});
+
+		state.layers[layerId] = newColors;
 	};
 
 	const kill = () => {
