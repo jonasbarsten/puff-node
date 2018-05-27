@@ -87,12 +87,14 @@ exports.allOn = (puffNumber) => {
 
 		rgbw.map((color) => {
 			const newColor = Number(color * master).toFixed(0);
-			rgbwPostMaster.push(newColor);
+			rgbwPostMaster.push(Number(newColor));
 		});
 
 		state.layers[layerId]['0'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
 		state.layers[layerId]['1'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
 		state.layers[layerId]['2'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
+
+		// console.log(state.layers[layerId]);
 	};
 
 	const kill = () => {
@@ -433,9 +435,9 @@ exports.rotateLineHorisontally = (puffNumber, lineNumber, reverse, preDelayTics,
 	return self;
 };
 
-exports.stop = () => {
-	clearTimeout(mainTimer);
-};
+// exports.stop = () => {
+// 	clearTimeout(mainTimer);
+// };
 
 exports.outputOnce = () => {
 
@@ -498,9 +500,9 @@ exports.outputOnce = () => {
   // );
 }
 
-exports.start = () => {
-	this.outputOnce();
-	mainTimer = setTimeout(this.start, outputRate);
-};
+// exports.start = () => {
+// 	this.outputOnce();
+// 	mainTimer = setTimeout(this.start, outputRate);
+// };
 
-this.start();
+// this.start();
