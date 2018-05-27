@@ -1,6 +1,6 @@
 ## OSC-API
 
-Broadcast on port 8050, both in and out.
+Broadcast on port `8050`, both in and out.
 
 ex. in Max/MSP: `[udpsend 10.0.255.255 8050]` and `[udpreceive 8050]`
 
@@ -15,21 +15,21 @@ This works in association with the [client repo](https://github.com/jonasbarsten
 
 |IN|VALUE|DEFAULT|
 |---|---|---|
-|/puff/{ip}/update|`see below`|
-|/puff/{ip}/cableLight|Float|
-|/puff/{ip}/lights/global|clearAll|
-|/puff/{ip}/lights/layer/{i}/start||false|
-|/puff/{ip}/lights/layer/{i}/stop||true|
-|/puff/{ip}/lights/layer/{i}/speed|Int `ms to next tic`|500|
-|/puff/{ip}/lights/layer/{i}/color|String `"255 255 255 255"`|10 10 10 10|
-|/puff/{ip}/lights/layer/{i}/program|String `line-s/line-n/line-e/line-w/line-ne/line-nw/line-se/line-sw/random/allOn/allOff`|line-s|
-|/puff/{ip}/lights/layer/{i}/dim|Not implemented yet|??|
-|/puff/{ip}/lights/layer/{i}/piezo|Boolean|false|
-|/puff/{ip}/lights/layer/{i}/magneticNorth|Boolean|false|
-|/puff/{ip}/lights/layer/{i}/preOffset|Int `tics`|0|
-|/puff/{ip}/lights/layer/{i}/postOffset|Int `tics`|0|
+|/puff/`{ip}`/update|`see below`|
+|/puff/`{ip}`/cableLight|Float|
+|/puff/`{ip}`/lights/global|clearAll|
+|/puff/`{ip}`/lights/layer/{i}/start||false|
+|/puff/`{ip}`/lights/layer/{i}/stop||true|
+|/puff/`{ip}`/lights/layer/{i}/speed|Int `ms to next tic`|500|
+|/puff/`{ip}`/lights/layer/{i}/color|String `"255 255 255 255"`|10 10 10 10|
+|/puff/`{ip}`/lights/layer/{i}/program|String `line-s/line-n/line-e/line-w/line-ne/line-nw/line-se/line-sw/random/allOn/allOff`|line-s|
+|/puff/`{ip}`/lights/layer/{i}/dim|Not implemented yet|??|
+|/puff/`{ip}`/lights/layer/{i}/piezo|Boolean|false|
+|/puff/`{ip}`/lights/layer/{i}/magneticNorth|Boolean|false|
+|/puff/`{ip}`/lights/layer/{i}/preOffset|Int `tics`|0|
+|/puff/`{ip}`/lights/layer/{i}/postOffset|Int `tics`|0|
 
-* change ip to `all` to address all available puffs
+* change `{ip}` to `all` to address all available puffs
 * when running `update all` from the front it will send a OSC update command to all available puffs.
 * the update command consists of `cd`, `git pull` and `sudo reboot` on both the `puff-node` and `puff-client` repos.
 
@@ -64,7 +64,7 @@ Puffs MUST be connected after main rack has booted!
 
 The same front lives on all puffs and they know about each outher due to OSC ping broadcast, so the same front with the same content can be seen on port 5000 on any puff. 
 
-* [Github](https://github.com/jonasbarsten/puff-client)
+* [client repo](https://github.com/jonasbarsten/puff-client)
 * Puff GUI: http://puff.local:5000
 
 Deploy:
