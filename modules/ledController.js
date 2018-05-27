@@ -30,14 +30,14 @@ const newLayer = () => {
 	return layerId;
 }
 
-exports.setColor = (newRgbw) => {
-	rgbw = newRgbw;
-};
+// exports.setColor = (newRgbw) => {
+// 	rgbw = newRgbw;
+// };
 
-exports.setUpdateRate = (newUpdateRate) => {
-	console.log(newUpdateRate);
-	updateRate = newUpdateRate;
-};
+// exports.setUpdateRate = (newUpdateRate) => {
+// 	console.log(newUpdateRate);
+// 	updateRate = newUpdateRate;
+// };
 
 exports.clearAll = (puffNumber) => {
 	state.layers = {};
@@ -47,6 +47,7 @@ exports.allOff = (puffNumber) => {
 	var self = {};
 	let rgbw = rgbwDefault;
 	const layerId = newLayer();
+	let master = 1;
 
 	const output = () => {
 		state.layers[layerId]['0'] = [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]];
@@ -62,6 +63,11 @@ exports.allOff = (puffNumber) => {
 		rgbw = color;
 	};
 
+	const changeMaster = (value) => {
+		master = value;
+	};
+
+	self.changeMaster = changeMaster;
 	self.output = output;
 	self.kill = kill;
 	self.changeColor = changeColor;
@@ -73,11 +79,20 @@ exports.allOn = (puffNumber) => {
 	var self = {};
 	let rgbw = rgbwDefault;
 	const layerId = newLayer();
+	let master = 1;
 
 	const output = () => {
-		state.layers[layerId]['0'] = [rgbw, rgbw, rgbw, rgbw];
-		state.layers[layerId]['1'] = [rgbw, rgbw, rgbw, rgbw];
-		state.layers[layerId]['2'] = [rgbw, rgbw, rgbw, rgbw];
+
+		let rgbwPostMaster = [];
+
+		rgbw.map((color) => {
+			const newColor = Number(color * master).toFixed(0);
+			rgbwPostMaster.push(newColor);
+		});
+
+		state.layers[layerId]['0'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
+		state.layers[layerId]['1'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
+		state.layers[layerId]['2'] = [rgbwPostMaster, rgbwPostMaster, rgbwPostMaster, rgbwPostMaster];
 	};
 
 	const kill = () => {
@@ -88,6 +103,11 @@ exports.allOn = (puffNumber) => {
 		rgbw = color;
 	};
 
+	const changeMaster = (value) => {
+		master = value;
+	};
+
+	self.changeMaster = changeMaster;
 	self.output = output;
 	self.kill = kill;
 	self.changeColor = changeColor;
@@ -100,6 +120,7 @@ exports.random = (puffNumber) => {
 	let rgbw = rgbwDefault;
 	const layerId = newLayer();
 	let randomAmount = 0; // 0 - 100 (0 = max random, 100 = ikke random)
+	let master = 1;
 
 	const getRandomInt = (min, max) => {
 	  return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -127,6 +148,11 @@ exports.random = (puffNumber) => {
 		randomAmount = randomAmount;
 	};
 
+	const changeMaster = (value) => {
+		master = value;
+	};
+
+	self.changeMaster = changeMaster;
 	self.output = output;
 	self.changeRandomAmount = changeRandomAmount;
 	self.kill = kill;
@@ -171,6 +197,13 @@ exports.rotatePuffHorizontally = (puffNumber, reverse, preDelayTics, postDelayTi
 		});
 	};
 
+	const changeMaster = (value) => {
+		lines.map((line) => {
+			line.changeMaster(value);
+		});
+	};
+
+	self.changeMaster = changeMaster;
 	self.output = output;
 	self.kill = kill;
 	self.changeColor = changeColor;
@@ -185,6 +218,7 @@ exports.rotatePuffVertically = (puffNumber, reverse) => {
 	let rgbw = rgbwDefault;
 	const layerId = newLayer();
 	let tic = 1;
+	let master = 1;
 
 	if (reverse) {
 		tic = 3;
@@ -221,6 +255,11 @@ exports.rotatePuffVertically = (puffNumber, reverse) => {
 		delete state.layers[layerId];
 	};
 
+	const changeMaster = (value) => {
+		master = value;
+	};
+
+	self.changeMaster = changeMaster;
 	self.output = output;
 	self.changeColor = changeColor;
 	self.kill = kill;
@@ -288,6 +327,13 @@ exports.rotatePuffDiagonally = (puffNumber, mode, preDelayTics, postDelayTics) =
 		});
 	};
 
+	const changeMaster = (value) => {
+		lines.map((line) => {
+			line.changeMaster(value);
+		});
+	};
+
+	self.changeMaster = changeMaster;
 	self.output = output;
 	self.kill = kill;
 	self.changeColor = changeColor;
@@ -302,6 +348,7 @@ exports.rotateLineHorisontally = (puffNumber, lineNumber, reverse, preDelayTics,
 	let rgbw = rgbwDefault;
 	const layerId = newLayer();
 	let tics = 1;
+	let master = 1;
 
 	if (preDelayTics) {
 		tics = tics - preDelayTics;
@@ -374,6 +421,11 @@ exports.rotateLineHorisontally = (puffNumber, lineNumber, reverse, preDelayTics,
 		delete state.layers[layerId];
 	}
 
+	const changeMaster = (value) => {
+		master = value;
+	};
+
+	self.changeMaster = changeMaster;
 	self.output = output;
 	self.kill = kill;
 	self.changeColor = changeColor;

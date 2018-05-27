@@ -265,7 +265,7 @@ osc.listen((message, info) => {
         timer: null,
         func: null,
         program: 'line-s',
-        randomAmount: 1
+        master: 1
       };
 
       // TODO: validation on every case
@@ -297,14 +297,14 @@ osc.listen((message, info) => {
           const isMagneticNorthTrue = (value == 'true');
           newLayer.magneticNorth = isMagneticNorthTrue;
           break;
-        case 'randomAmount':
-          newLayer.randomAmount = randomAmount;
-          break;
         case 'preOffset':
           newLayer.preOffset = value;
           break;
         case 'postOffset':
           newLayer.postOffset = value;
+          break;
+        case 'master':
+          newLayer.master = value;
           break;
         default:
           console.log('Unknown layer function');
@@ -369,13 +369,9 @@ osc.listen((message, info) => {
             }
           }
           break;
-        case 'randomAmount':
-          state.activeLayers[layerNumber].randomAmount = randomAmount;
-          if (state.activeLayers[layerNumber].program == 'random') {
-            state.activeLayers[layerNumber].func.changeRandomAmount(state.activeLayers[layerNumber].randomAmount);
-          } else {
-            console.log('Current program is not random');
-          };
+        case 'master':
+          state.activeLayers[layerNumber].master = value;
+          state.activeLayers[layerNumber].func.changeMaster(value);
           break;
         case 'preOffset':
           break;
