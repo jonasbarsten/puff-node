@@ -24,10 +24,6 @@ const oscError = (msg) => {
   ]);
 };
 
-setTimeout(() => {
-  midi.noteSend(0, 127, 1);
-}, 8000);
-
 io.on('connection', (client) => {
   client.on('runFunction', (functionName, args) => {
     ledController[functionName](...args);
@@ -70,6 +66,7 @@ const getIp = () => {
 };
 
 let state = {
+  cableLight: 0,
   activeLayers: {},
   lastMidi: {},
   lastOsc: {},
@@ -77,6 +74,32 @@ let state = {
   hostName: os.hostname(),
   neighbours: [],
 };
+
+const fadeCable = (amount) => {
+  state.cableLight = state.cableLight + amount;
+  midi.noteSend(0, state.cableLight, 1);
+};
+
+setTimeout(() => {
+
+  let direction = null;
+
+  setInterval(() => {
+    if (state.cableLight == 0) {
+      direction = 'up';
+    } else if (state.cableLight == 127) {
+      direction = 'down';
+    };
+
+    if (direction == 'up') {
+      fadeCable(1);
+    }
+
+    if (direction == 'down') {
+      fadeCable(-1);
+    }
+  }, 30);
+}, 8000);
 
 setTimeout(() => {
 
@@ -131,8 +154,6 @@ osc.listen((message, info) => {
     }
   };
 
-  // const value = (message && message.args[0] && message.args[0].value); // 200, [255, 255, 255, 255]
-
   const validIncommingDepartments = ['lights', 'ping', 'update', 'cableLight'];
 
   if (validIncommingDepartments.indexOf(department) == -1) {
@@ -155,8 +176,6 @@ osc.listen((message, info) => {
     };
     return;
   };
-
-  
 
   // Break if message isn't intended for current server
   if (state.localIp != ip || item != 'puff') {
@@ -263,22 +282,12 @@ osc.listen((message, info) => {
           break;
       }
 
-      // let command = programMap[newLayer.program].cmd;
-      // let args = programMap[newLayer.program].args;
-
       state.activeLayers[layerNumber] = newLayer;
       createLayer(layerNumber);
-      // // Create new instance
-      // state.activeLayers[layerNumber].func = ledController[command](...args);
 
       // Starting layer with default values if initial command is "start"
       if (state.activeLayers[layerNumber].running) {
         startLayer(layerNumber, true);
-        // const runOnce = () => {
-        //   state.activeLayers[layerNumber].func.output();
-        //   state.activeLayers[layerNumber].timer = setTimeout(runOnce, state.activeLayers[layerNumber].speed);
-        // };
-        // runOnce();
       };
 
 
@@ -359,56 +368,6 @@ const startLayer = (layerNumber, force) => {
   runOnce();
   state.activeLayers[layerNumber].running = true;
 };
-  
-
-
-
-  
-
-
-
-//   switch (func) {
-//     case 'start':
-//       if (state.activeLayers[layer].running) {
-//         console.log(`Layer ${layer} is already running`);
-//       } else {
-//         const runOnce = () => {
-//           state.activeLayers[layer].func.output();
-//           state.activeLayers[layer].timer = setTimeout(runOnce, state.activeLayers[layer].speed);
-//         }
-//         runOnce();
-//         state.activeLayers[layer].running = true;
-//       };
-//       break;
-//     case 'stop':
-//       if (!state.activeLayers[layer].running) {
-//         console.log(`Layer ${layer} is not running`);
-//       } else {
-//         clearTimeout(state.activeLayers[layer].timer);
-//         state.activeLayers[layer].running = false;
-//       }
-//       break;
-//     case 'speed':
-//       state.activeLayers[layer].speed = value;
-//       break;
-//     case 'color':
-//       let valueList = value;
-//       for(var i = 0; i < valueList.length; i++) {
-//        valueList = valueList.replace(" ", ",");
-//       };
-//       const color = JSON.parse("[" + valueList + "]");
-//       state.activeLayers[layer].color = color;
-//       state.activeLayers[layer].func.changeColor(color);
-//       break;
-//     case 'preOffset':
-//       break;
-//     case 'postOffset':
-//       break;
-//     default:
-//       console.log('Unknown command');
-//   }
-// });
-
 
 setInterval(() => {
   state.localIp = getIp();
