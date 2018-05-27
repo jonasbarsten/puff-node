@@ -13,7 +13,7 @@ This works in association with the [client repo](https://github.com/jonasbarsten
 |/puff/{ip}/ping|date|Int|
 |/puff/{ip}/error|message|String|
 
-|COMMAND|VALUE|DEFAULT|
+|IN|VALUE|DEFAULT|
 |---|---|---|
 |/puff/{ip}/update|`see below`|
 |/puff/{ip}/cableLight|Float|
