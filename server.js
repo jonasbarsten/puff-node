@@ -311,7 +311,6 @@ osc.listen((message, info) => {
 
       state.activeLayers[layerNumber] = newLayer;
       createLayer(layerNumber);
-      console.log(state);
       // // Create new instance
       // state.activeLayers[layerNumber].func = ledController[command](...args);
 

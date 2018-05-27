@@ -83,7 +83,7 @@ exports.random = (puffNumber) => {
 	};
 
 	self.output = output;
-	self.changeRange = changeRange;
+	self.changeRandomAmount = changeRandomAmount;
 	self.kill = kill;
 	self.changeColor = changeColor;
 
