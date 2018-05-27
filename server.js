@@ -382,7 +382,6 @@ osc.listen((message, info) => {
 });
 
 const createLayer = (layerNumber) => {
-  console.log('creating');
   let command = programMap[state.activeLayers[layerNumber].program].cmd;
   let args = programMap[state.activeLayers[layerNumber].program].args;
   // Create new instance
@@ -391,8 +390,6 @@ const createLayer = (layerNumber) => {
 
 const startLayer = (layerNumber, force) => {
 
-  console.log('starting');
-
   if (state.activeLayers[layerNumber].running && !force) {
     console.log(`Layer ${layerNumber} already running`);
     oscError(`Layer ${layerNumber} already running`);
@@ -400,7 +397,6 @@ const startLayer = (layerNumber, force) => {
   }
 
   const runOnce = () => {
-    console.log('Boom');
     state.activeLayers[layerNumber].func.output();
     state.activeLayers[layerNumber].timer = setTimeout(runOnce, state.activeLayers[layerNumber].speed);
   };
