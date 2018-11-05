@@ -110,6 +110,7 @@ setTimeout(() => {
   // The piezos in the puffs behave differently
   switch (state.localIp) {
     case "10.0.128.131":
+      console.log('boom');
       state.piezoThreshold = 0.3;
       state.activePiezos =  [0, 1, 2, 3, 4, 5, 6, 7];
       break;
