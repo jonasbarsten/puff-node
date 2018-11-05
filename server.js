@@ -73,9 +73,9 @@ let state = {
   localIp: getIp(),
   hostName: os.hostname(),
   neighbours: [],
-  piezo: [0,0,0,0],
+  piezo: [0,0,0,0,0,0,0,0],
   piezoThreshold: 0.4,
-  activePiezos: [0, 1, 2, 3],
+  activePiezos: [0, 1, 2, 3, 4, 5, 6, 7],
   piezoMax: 0
 };
 
@@ -111,7 +111,7 @@ setTimeout(() => {
   switch (state.localIp) {
     case "10.0.128.131":
       state.piezoThreshold = 0.3;
-      state.activePiezos =  [0, 1, 3];
+      state.activePiezos =  [0, 1, 2, 3, 4, 5, 6, 7];
       break;
     default:
       break;
@@ -127,7 +127,7 @@ setTimeout(() => {
     //   state.piezo[note - 1] = value;
     // }
 
-    state.piezo[note - 1] = value;
+    state.piezo[note] = value;
     
     console.log(state.piezo);
     const piezoSum = state.piezo.reduce((a, b) => a + b, 0);
