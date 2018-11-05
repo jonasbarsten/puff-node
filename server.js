@@ -119,7 +119,7 @@ setTimeout(() => {
         }
       ]);
 
-      if (piezoSum > 0.35 && state.activeLayers["1"]) {
+      if (piezoSum > 0.4 && state.activeLayers["1"]) {
         osc.sendLocal(`/puff/${state.localIp}/lights/layer/1/master`, [
           {
             type: "f",
@@ -133,7 +133,7 @@ setTimeout(() => {
               value: 0
             }
           ]);
-        }, 300)
+        }, 500)
       }
 
     };
