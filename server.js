@@ -73,7 +73,10 @@ let state = {
   localIp: getIp(),
   hostName: os.hostname(),
   neighbours: [],
-  piezo: [0,0,0,0]
+  piezo: [0,0,0,0],
+  piezoThreshold: 0.4,
+  activePiezos: [1, 2, 3, 4],
+  piezoMax: 0
 };
 
 const fadeCable = (amount) => {
@@ -104,11 +107,29 @@ setTimeout(() => {
 
 setTimeout(() => {
 
+  // The piezos in the puffs behave differently
+  switch (state.localIp) {
+    case "10.0.128.131":
+      state.piezoThreshold: 0.3;
+      state.activePiezos: [1, 2, 4];
+      break;
+    default:
+      break;
+  }
+
   // Waiting since not waiting would cause crashes from time to time
   midi.noteListen((note, value) => {
 
-    state.piezo[note - 1] = value;
+    // Have to mute som piezos due to noise
+    const activePiezo = state.activePiezos.indexOf(note);
+
+    if (activePiezo) {
+      state.piezo[note - 1] = value;
+    }
+    
     const piezoSum = state.piezo.reduce((a, b) => a + b, 0);
+
+    if (piezoSum > state.piezoMax) {state.piezoMax = piezoSum; console.log(state.piezoMax);};
 
     // Piezo
     if (note == 0 || note == 1 || note == 2 || note == 3) {
