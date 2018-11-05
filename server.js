@@ -110,8 +110,8 @@ setTimeout(() => {
   // The piezos in the puffs behave differently
   switch (state.localIp) {
     case "10.0.128.131":
-      state.piezoThreshold: 0.3;
-      state.activePiezos: [1, 2, 4];
+      state.piezoThreshold = 0.3;
+      state.activePiezos = [1, 2, 4];
       break;
     default:
       break;
