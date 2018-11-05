@@ -45,6 +45,8 @@ This works in association with the [client repo](https://github.com/jonasbarsten
 * when running `update all` from the front it will send a OSC update command to all available puffs.
 * the update command consists of `cd`, `git pull` and `sudo reboot` on both the `puff-node` and `puff-client` repos.
 
+NB: piezos will use the first 30 seconds after boot to calibrate them self, so no touching the first 30 sec!!
+
 ## Accordion spesific:
 
 |NAME|MAC|IP|

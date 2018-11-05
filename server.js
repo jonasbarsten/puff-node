@@ -107,15 +107,17 @@ setTimeout(() => {
 }, 8000);
 
 setTimeout(() => {
+  // Calibrate piezos on startup
+  state.piezoThreshold = state.piezoSumMax + 0.05;
+  console.log('Piezo threshold set to ' + state.piezoThreshold);
+}, 30000);
+
+setTimeout(() => {
 
   // The piezos in the puffs behave differently
   switch (state.localIp) {
     case "10.0.128.131":
-      state.piezoThreshold = 0.3;
       state.disabledPiezos =  [2, 3];
-      break;
-    case "10.0.128.129":
-      state.piezoThreshold = 0.6;
       break;
     default:
       break;
