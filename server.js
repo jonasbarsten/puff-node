@@ -121,13 +121,13 @@ setTimeout(() => {
   midi.noteListen((note, value) => {
 
     // Have to mute som piezos due to noise
-    // const activePiezo = state.activePiezos.indexOf(note);
+    const activePiezo = state.activePiezos.indexOf(note);
 
-    // if (activePiezo != -1) {
-    //   state.piezo[note - 1] = value;
-    // }
+    if (activePiezo != -1) {
+      state.piezo[note] = value;
+    }
 
-    state.piezo[note] = value;
+    // state.piezo[note] = value;
     
     console.log(state.piezo);
     const piezoSum = state.piezo.reduce((a, b) => a + b, 0);
