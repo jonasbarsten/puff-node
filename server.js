@@ -113,6 +113,12 @@ setTimeout(() => {
           value: value
         }
       ]);
+      osc.sendLocal(`/puff/${state.localIp}/lights/layer/1/master`, [
+        {
+          type: "f",
+          value: value
+        }
+      ]);
     };
   });
 

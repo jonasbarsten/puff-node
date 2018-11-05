@@ -44,6 +44,15 @@ exports.send = (address, args) => {
 	}
 };
 
+exports.sendLocal = (address, args) => {
+	if (oscPortReady) {
+		udpPort.send({
+			address: address,
+			args: args
+		}, "127.0.0.1", outPort);
+	}
+};
+
 exports.changeOutPort = (port) => {
 	this.close();
 	outPort = port;
