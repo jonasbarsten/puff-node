@@ -111,7 +111,7 @@ setTimeout(() => {
   switch (state.localIp) {
     case "10.0.128.131":
       state.piezoThreshold = 0.3;
-      state.disabledPiezos =  [2];
+      state.disabledPiezos =  [2, 3];
       break;
     default:
       break;
