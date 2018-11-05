@@ -123,7 +123,7 @@ setTimeout(() => {
     // Have to mute som piezos due to noise
     const activePiezo = state.activePiezos.indexOf(note);
 
-    if (activePiezo) {
+    if (activePiezo != -1) {
       state.piezo[note - 1] = value;
     }
     
