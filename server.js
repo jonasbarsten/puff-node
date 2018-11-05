@@ -114,7 +114,7 @@ setTimeout(() => {
         }
       ]);
 
-      if (value > 0.2) {
+      if (value > 0.2 && state.activeLayers["1"]) {
         osc.sendLocal(`/puff/${state.localIp}/lights/layer/1/master`, [
           {
             type: "f",
