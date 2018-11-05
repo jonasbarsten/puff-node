@@ -132,9 +132,9 @@ setTimeout(() => {
 
     // state.piezo[note] = value;
 
-    if (state.piezo[note] > state.piezoMax[note]) {state.piezoMax[note] = state.piezo[note]; console.log(state.piezoMax)}
-    
     const piezoSum = state.piezo.reduce((a, b) => a + b, 0);
+
+    if (state.piezo[note] > state.piezoMax[note]) {state.piezoMax[note] = state.piezo[note]; console.log(state.piezoMax); console.log(piezoSum);}
 
     // Piezo
     if (note == 0 || note == 1 || note == 2 || note == 3) {
