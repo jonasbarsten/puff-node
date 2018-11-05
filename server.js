@@ -75,7 +75,7 @@ let state = {
   neighbours: [],
   piezo: [0,0,0,0,0,0,0,0],
   piezoThreshold: 0.4,
-  activePiezos: [0, 1, 2, 3, 4, 5, 6, 7],
+  disabledPiezos: [],
   piezoMax: 0
 };
 
@@ -110,9 +110,8 @@ setTimeout(() => {
   // The piezos in the puffs behave differently
   switch (state.localIp) {
     case "10.0.128.131":
-      console.log('boom');
       state.piezoThreshold = 0.3;
-      state.activePiezos =  [0, 1, 2, 3, 4, 5, 6, 7];
+      state.disabledPiezos =  [2];
       break;
     default:
       break;
@@ -122,9 +121,9 @@ setTimeout(() => {
   midi.noteListen((note, value) => {
 
     // Have to mute som piezos due to noise
-    const activePiezo = state.activePiezos.indexOf(note);
+    const activePiezo = state.disabledPiezos.indexOf(note);
 
-    if (activePiezo != -1) {
+    if (activePiezo == -1) {
       state.piezo[note] = value;
     }
 
