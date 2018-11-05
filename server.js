@@ -76,7 +76,7 @@ let state = {
   piezo: [0,0,0,0,0,0,0,0],
   piezoThreshold: 0.4,
   disabledPiezos: [],
-  piezoMax: 0
+  piezoMax: [0,0,0,0,0,0,0,0]
 };
 
 const fadeCable = (amount) => {
@@ -128,11 +128,10 @@ setTimeout(() => {
     }
 
     // state.piezo[note] = value;
-    
-    console.log(state.piezo);
-    const piezoSum = state.piezo.reduce((a, b) => a + b, 0);
 
-    if (piezoSum > state.piezoMax) {state.piezoMax = piezoSum; console.log(state.piezoMax);};
+    if (state.piezo[note] > state.piezoMax[note]) {state.piezoMax[note] = state.piezo[note]; console.log(state.piezoMax)}
+    
+    const piezoSum = state.piezo.reduce((a, b) => a + b, 0);
 
     // Piezo
     if (note == 0 || note == 1 || note == 2 || note == 3) {
