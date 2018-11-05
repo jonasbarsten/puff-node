@@ -75,7 +75,7 @@ let state = {
   neighbours: [],
   piezo: [0,0,0,0],
   piezoThreshold: 0.4,
-  activePiezos: [1, 2, 3, 4],
+  activePiezos: [0, 1, 2, 3],
   piezoMax: 0
 };
 
@@ -111,7 +111,7 @@ setTimeout(() => {
   switch (state.localIp) {
     case "10.0.128.131":
       state.piezoThreshold = 0.3;
-      state.activePiezos = [1, 2, 4];
+      state.activePiezos =  [0, 1, 3];
       break;
     default:
       break;
