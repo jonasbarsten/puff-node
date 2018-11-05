@@ -73,6 +73,7 @@ let state = {
   localIp: getIp(),
   hostName: os.hostname(),
   neighbours: [],
+  piezo: [0,0,0,0]
 };
 
 const fadeCable = (amount) => {
@@ -105,6 +106,10 @@ setTimeout(() => {
 
   // Waiting since not waiting would cause crashes from time to time
   midi.noteListen((note, value) => {
+
+    state.piezo[note - 1] = value;
+    const piezoSum = state.piezo.reduce((a, b) => a + b, 0);
+
     // Piezo
     if (note == 0 || note == 1 || note == 2 || note == 3) {
       osc.send(`/puff/${state.localIp}/piezo/${note}`, [
@@ -114,7 +119,7 @@ setTimeout(() => {
         }
       ]);
 
-      if (value > 0.2 && state.activeLayers["1"]) {
+      if (piezoSum > 0.8 && state.activeLayers["1"]) {
         osc.sendLocal(`/puff/${state.localIp}/lights/layer/1/master`, [
           {
             type: "f",
@@ -128,7 +133,7 @@ setTimeout(() => {
               value: 0
             }
           ]);
-        }, 200)
+        }, 300)
       }
 
     };
