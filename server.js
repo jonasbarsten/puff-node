@@ -113,6 +113,9 @@ setTimeout(() => {
       state.piezoThreshold = 0.3;
       state.disabledPiezos =  [2, 3];
       break;
+    case "10.0.128.129":
+      state.piezoThreshold = 0.6;
+      break;
     default:
       break;
   }
