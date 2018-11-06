@@ -109,7 +109,7 @@ setTimeout(() => {
 setTimeout(() => {
   // Calibrate piezos on startup
   state.piezoThreshold = state.piezoSumMax + 0.05;
-  console.log('Piezo threshold set to ' + state.piezoThreshold);
+  console.log('Piezo threshold set to ' + state.piezoThreshold + ' :)');
 }, 30000);
 
 setTimeout(() => {
@@ -118,6 +118,9 @@ setTimeout(() => {
   switch (state.localIp) {
     case "10.0.128.131":
       state.disabledPiezos =  [2, 3];
+      break;
+    case "10.0.128.140":
+      state.disabledPiezos =  [1, 2, 3];
       break;
     default:
       break;
