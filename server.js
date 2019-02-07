@@ -15,6 +15,10 @@ const update = () => {
   shell.exec('cd /home/pi/puff-node && git pull && npm install && cd /home/pi/puff-client && git pull && sudo reboot');
 };
 
+const revertToStable = () => {
+  shell.exec('cd /home/pi/puff-node && git checkout 5d0e2e12ef947f7c62960af37cf741ff9c6742b5 && git fetch && npm install && sudo reboot');
+};
+
 const oscError = (msg) => {
   osc.send(`/puff/${state.localIp}/error`, [
     {
@@ -138,8 +142,15 @@ setTimeout(() => {
 
     const piezoSum = state.piezo.reduce((a, b) => a + b, 0);
 
-    if (state.piezo[note] > state.piezoMax[note]) {state.piezoMax[note] = state.piezo[note]; console.log(state.piezoMax);}
-    if (piezoSum > state.piezoSumMax) {state.piezoSumMax = piezoSum; console.log(state.piezoSumMax);}
+    if (state.piezo[note] > state.piezoMax[note]) {
+      state.piezoMax[note] = state.piezo[note]; 
+      // console.log(state.piezoMax);
+    }
+
+    if (piezoSum > state.piezoSumMax) {
+      state.piezoSumMax = piezoSum; 
+      // console.log(state.piezoSumMax);
+    }
 
     // Piezo
     if (note == 0 || note == 1 || note == 2 || note == 3) {
@@ -239,6 +250,7 @@ osc.listen((message, info) => {
   };
 
   let globalLayer = false;
+
   if (ip == 'all') {
     globalLayer = true;
   }
@@ -422,10 +434,14 @@ const startLayer = (layerNumber, force) => {
   }
 
   const runOnce = () => {
-    state.activeLayers[layerNumber].func.output();
-    state.activeLayers[layerNumber].timer = setTimeout(runOnce, state.activeLayers[layerNumber].speed);
+    if (state.activeLayers[layerNumber]) {
+      state.activeLayers[layerNumber].func.output();
+      state.activeLayers[layerNumber].timer = setTimeout(runOnce, state.activeLayers[layerNumber].speed);
+    }
   };
+
   runOnce();
+
   state.activeLayers[layerNumber].running = true;
 };
 
