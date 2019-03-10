@@ -59,6 +59,7 @@ NB: piezos will use the first 30 seconds after boot to calibrate them self, so n
 |puff-6|b8:27:eb:d6:f7:cb|10.0.128.142|
 |puff-7|b8:27:eb:5d:1d:59|10.0.128.119|
 |puff-8|b8:27:eb:5c:75:90|10.0.128.145|
+|puff-9|b8:27:eb:a2:0c:7d|10.0.128.126|
 
 * Subnetmask: 255.255.0.0
 * Router: 10.0.0.1
